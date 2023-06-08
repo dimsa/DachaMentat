@@ -27,4 +27,13 @@ sudo apt-get update
 sudo apt-get upgrade
 
 #8) Install aspnet-core-runtime
-sudo apt-get install  aspnetcore-runtime-7.0
+sudo apt-get install aspnetcore-runtime-7.0 
+sudo apt-get install dotnet-sdk-7.0
+
+#9)
+cd /home
+git clone https://github.com/dimsa/DachaMentat
+
+cd /home/DachaMentat/src/DachaMentat
+dotnet build "DachaMentat.csproj" -c Release -o /app/build
+dotnet publish "DachaMentat.csproj" -c Release -o /app/publish /p:UseAppHost=false
