@@ -1,3 +1,4 @@
+using DachaMentat.DTO;
 using DachaMentor.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,10 +27,33 @@ namespace DachaMentor.Controllers
             };
         }
 
-        [HttpPut(Name = "AddIndication/{id}/{value}")]
-        public Task<bool> AddIndication(string id, double value)
+        [HttpPut(Name = "AddIndication/{id}")]
+        public Task<bool> AddIndication(string id, [FromBody] SensorIndicationDto indication)
         {
-            return _sensorService.AddIndication(id, value);
+            return _sensorService.AddIndication(id, indication.PrivateKey, indication.Value);
+        }
+
+        [HttpPost("RegisterSensor")]
+        public IActionResult RegisterSensor([FromBody] SensorRegistrationDto sensorDto)
+        {
+            if (sensorDto == null)
+            {
+                return BadRequest("Invalid sensor data");
+            }
+
+            if (string.IsNullOrEmpty(sensorDto.PrivateId))
+            {
+                return BadRequest("PrivateId is required");
+            }
+
+            var registrationResult = _sensorService.RegisterSensor(sensorDto.PrivateId, sensorDto.UnitOfMeasure, sensorDto.Coordinates);
+
+            var response = new SensorRegistrationResponseDto()
+            {
+                Id = registrationResult.Item1,
+                PrivateKey = registrationResult.Item2,
+            };
+            return Ok(response);
         }
     }
 }
