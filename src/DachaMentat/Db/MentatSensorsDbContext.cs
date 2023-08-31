@@ -6,7 +6,13 @@ namespace DachaMentat.Db
     public class MentatSensorsDbContext : DbContext
     {
         public DbSet<Sensor> Sensors { get; set; }
+
         public DbSet<Indication> Indications { get; set; }
+
+        public MentatSensorsDbContext()
+        {
+            Database.EnsureCreated();
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,13 +34,12 @@ namespace DachaMentat.Db
                 entity.Property(e => e.SensorId).IsRequired();                
             });
 
-
-            base.OnModelCreating(modelBuilder);
+    
+               base.OnModelCreating(modelBuilder);
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            // Configure the SQLite database connection string
-            optionsBuilder.UseSqlite("Data Source=mentat1.db");
+            optionsBuilder.UseSqlite("Data Source=mentat.db");
         }
     }
 }

@@ -37,3 +37,5 @@ git clone https://github.com/dimsa/DachaMentat
 cd /home/DachaMentat/src/DachaMentat
 dotnet build "DachaMentat.csproj" -c Release -o /app/build
 dotnet publish "DachaMentat.csproj" -c Release -o /app/publish /p:UseAppHost=false
+cd /app/publish
+d

@@ -30,7 +30,6 @@ namespace DachaMentor.Services
         {
             try
             {
-
                 CheckSensorExistsAndCanBeAccessed(sensorId, sensorPrivateKey);
 
                 using (var context = new MentatSensorsDbContext())
