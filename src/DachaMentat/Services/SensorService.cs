@@ -12,52 +12,10 @@ namespace DachaMentor.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="SensorService"/> class.
         /// </summary>
-        public SensorService()
+        public SensorService() 
         {
 
-        }
-
-        /// <summary>
-        /// Adds the indication.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <param name="privateKey">The private key.</param>
-        /// <param name="value">The value.</param>
-        /// <returns></returns>
-        /// <exception cref="DachaMentat.Exceptions.MentatDbException">
-        /// Please use private key to add indication
-        /// or
-        /// Sensor was not found
-        /// </exception>
-        public async Task<bool> AddIndication(int id, string privateKey, double value)
-        {
-            using (var context = new MentatSensorsDbContext())
-            {
-                if (string.IsNullOrEmpty(privateKey))
-                {
-                    throw new MentatDbException("Please use private key to add indication");
-                }
-
-                var existingSensor = context.Sensors.FirstOrDefault(s => s.Id == id && privateKey == s.PrivateKey);
-
-                if (existingSensor == null)
-                {
-                    throw new MentatDbException("Sensor was not found");
-                }
-
-                var indication = new Indication
-                {
-                    SensorId = id,
-                    Timestamp = DateTime.UtcNow.ToUniversalTime(),
-                    Value = value,
-                };
-
-                context.Indications.Add(indication);
-                await context.SaveChangesAsync();
-
-                return true;
-            }
-        }
+        }    
 
         /// <summary>
         /// Registers the sensor.
@@ -193,36 +151,6 @@ namespace DachaMentor.Services
                 context.Sensors.Remove(existingSensor);
 
                 context.SaveChanges();
-            }
-        }
-
-        /// <summary>
-        /// Gets the last indication time.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns></returns>
-        /// <exception cref="DachaMentat.Exceptions.MentatDbException">Sensor {id} not found</exception>
-        internal async Task<string> GetLastIndicationTime(int id)
-        {
-            using (var context = new MentatSensorsDbContext())
-            {
-                var sensorExists = context.Sensors.Any(it => it.Id == id);
-
-                if (sensorExists)
-                {
-                    var sensor = await context.Sensors.FirstOrDefaultAsync(it => it.Id == id);
-
-                    if (sensor == null)
-                    {
-                        throw new MentatDbException($"Sensor {id} not found");
-                    }
-
-                    var lastIndication = context.Indications.Where(it => it.SensorId == id).OrderByDescending(it => it.Timestamp).FirstOrDefault();
-                    
-                    return $"{lastIndication.Value} {sensor.UnitOfMeasure} ({lastIndication.Timestamp.ToString("dd.MM.yyyy HH:mm:ss")})";
-                }
-
-                return null;
             }
         }
     }

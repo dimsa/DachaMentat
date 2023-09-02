@@ -8,7 +8,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton(typeof(SensorService));
+
+InitDependencyInjection(builder);
 
 var app = builder.Build();
 
@@ -21,6 +22,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthorization();
 
-app.MapControllers();   
+app.MapControllers();
 
 app.Run();
+
+static void InitDependencyInjection(WebApplicationBuilder builder)
+{
+    builder.Services.AddSingleton(typeof(SensorService));
+    builder.Services.AddSingleton(typeof(IndicationService));
+}

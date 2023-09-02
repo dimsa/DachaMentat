@@ -17,19 +17,6 @@ namespace DachaMentor.Controllers
             _sensorService = sensorService;
         }
 
-
-        [HttpGet("/Indication/{id}")]
-        public async Task<string> GetLastIndicationTimestamp(int id)
-        {
-            return await _sensorService.GetLastIndicationTime(id);
-        }
-        
-        [HttpPut("/Indication/{id}")]
-        public Task<bool> AddIndication(int id, [FromBody] SensorIndicationDto indication)
-        {
-            return _sensorService.AddIndication(id, indication.PrivateKey, indication.Value);
-        }
-
         [HttpGet("/sensors")]
         public async Task<IEnumerable<string>> GetSensors()
         {
