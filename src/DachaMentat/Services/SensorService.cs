@@ -108,12 +108,34 @@ namespace DachaMentat.Services
         /// Gets the sensors.
         /// </summary>
         /// <returns></returns>
-        internal async Task<IEnumerable<string>> GetSensors()
+        public async Task<IEnumerable<string>> GetSensors()
         {
             using (var context = new MentatSensorsDbContext())
             {
                 var existingSensors = await context.Sensors.Select(it => GetSensorRow(it)).ToArrayAsync();
                 return existingSensors;
+            }
+        }
+
+        /// <summary>
+        /// Gets the sensor unit of measure.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
+        /// <exception cref="DachaMentat.Exceptions.MentatDbException">Sensor with the specified ID wasn't found</exception>
+        public async Task<string> GetSensorUnitOfMeasure(int id)
+        {
+            using (var context = new MentatSensorsDbContext())
+            {
+                var sensorData = await context.Sensors
+                    .Where(s => s.Id == id).FirstOrDefaultAsync();  
+                
+                if (sensorData == null)
+                {
+                    throw new MentatDbException("Sensor with the specified ID wasn't found");
+                }
+                
+                return sensorData.UnitOfMeasure;
             }
         }
 

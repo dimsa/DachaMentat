@@ -68,16 +68,17 @@ namespace DachaMentat.Services
         /// <param name="startDate">The start date.</param>
         /// <param name="endDate">The end date.</param>
         /// <returns></returns>
-        public List<Indication> GetIndications(int sensorId, DateTime startDate, DateTime endDate)
+
+        public async Task<List<Indication>> GetIndications(int sensorId, DateTime startDate, DateTime endDate)
         {
             CheckSensorExists(sensorId);
 
             using (var context = new MentatSensorsDbContext())
             {
-                return context.Indications
+                return await context.Indications
                     .Where(i => i.SensorId == sensorId && i.Timestamp >= startDate && i.Timestamp <= endDate)
                     .OrderByDescending(i => i.Timestamp)
-                    .ToList();
+                    .ToListAsync();
             }
         }       
 

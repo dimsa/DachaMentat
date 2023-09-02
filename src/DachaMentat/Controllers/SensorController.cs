@@ -4,14 +4,18 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DachaMentat.Controllers
 {
+    /// <summary>
+    /// Sensor Controller
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
     [ApiController]
     public class SensorController : ControllerBase
     {
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<SensorController> _logger;
 
         private readonly SensorService _sensorService;
 
-        public SensorController(ILogger<WeatherForecastController> logger, SensorService sensorService)
+        public SensorController(ILogger<SensorController> logger, SensorService sensorService)
         {
             _logger = logger;
             _sensorService = sensorService;

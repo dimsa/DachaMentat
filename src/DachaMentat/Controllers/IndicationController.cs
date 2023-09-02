@@ -2,52 +2,30 @@ using DachaMentat.Db;
 using DachaMentat.DTO;
 using DachaMentat.Exceptions;
 using DachaMentat.Services;
+using DachaMentat.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DachaMentat.Controllers
 {
+    /// <summary>
+    /// Indication Controller
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
     [ApiController]
     public class IndicationController : ControllerBase
     {
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<IndicationController> _logger;
 
         private readonly IndicationService _indicationService;
 
-        public IndicationController(ILogger<WeatherForecastController> logger, IndicationService sensorService)
+        private readonly SensorService _sensorService;
+
+        public IndicationController(ILogger<IndicationController> logger, IndicationService indicationService, SensorService sensorService)
         {
             _logger = logger;
-            _indicationService = sensorService;
-        }
-
-        /// <summary>
-        /// Gets the last indication time.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns></returns>
-        /// <exception cref="DachaMentat.Exceptions.MentatDbException">Sensor {id} not found</exception>
-        internal async Task<string> GetLastIndicationTime(int id)
-        {
-            using (var context = new MentatSensorsDbContext())
-            {
-                var sensorExists = context.Sensors.Any(it => it.Id == id);
-
-                if (sensorExists)
-                {
-                    var sensor = await context.Sensors.FirstOrDefaultAsync(it => it.Id == id);
-
-                    if (sensor == null)
-                    {
-                        throw new MentatDbException($"Sensor {id} not found");
-                    }
-
-                    var lastIndication = context.Indications.Where(it => it.SensorId == id).OrderByDescending(it => it.Timestamp).FirstOrDefault();
-
-                    return $"{lastIndication.Value} {sensor.UnitOfMeasure} ({lastIndication.Timestamp.ToString("dd.MM.yyyy HH:mm:ss")})";
-                }
-
-                return null;
-            }
+            _indicationService = indicationService;
+            _sensorService = sensorService;
         }
 
         [HttpGet("/Indication/{id}")]
@@ -55,13 +33,31 @@ namespace DachaMentat.Controllers
         {
             return await _indicationService.GetLastIndicationTime(id);
         }
-        
+
+        [HttpGet("/Indication/report/{id}")]
+        public async Task<ChartIndicationDto> GetLastIndicationTimestamp(int id, string start, string end)
+        {
+            var startDate = DateTimeHelper.ParseDate(start);
+            var endDate = DateTimeHelper.ParseDate(end);
+
+            if ((endDate - startDate) > TimeSpan.FromDays(365) || (endDate - startDate) < TimeSpan.Zero)
+            {
+                throw new MentatRestrictionException("Please select period less then 1 year");
+            }
+
+            var indicationsFromDb = await _indicationService.GetIndications(id, startDate, endDate);
+            var unitOfMeasue = await _sensorService.GetSensorUnitOfMeasure(id);
+
+            var result = DataFormatter.FormatIndicationDataForChart(indicationsFromDb); 
+            result.UnitOfMeasure = unitOfMeasue;
+
+            return result;
+        }
+
         [HttpPut("/Indication/{id}")]
         public Task<bool> AddIndication(int id, [FromBody] SensorIndicationDto indication)
         {
             return _indicationService.AddIndication(id, indication.PrivateKey, indication.Value);
         }
-
-      
     }
 }
