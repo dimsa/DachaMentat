@@ -1,11 +1,11 @@
 using DachaMentat.Db;
 using DachaMentat.DTO;
 using DachaMentat.Exceptions;
-using DachaMentor.Services;
+using DachaMentat.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace DachaMentor.Controllers
+namespace DachaMentat.Controllers
 {
     [ApiController]
     public class IndicationController : ControllerBase

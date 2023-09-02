@@ -5,7 +5,7 @@ using DachaMentat.Utils;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace DachaMentor.Services
+namespace DachaMentat.Services
 {
     public class SensorService
     {

@@ -1,4 +1,4 @@
-namespace DachaMentor
+namespace DachaMentat
 {
     public class WeatherForecast
     {

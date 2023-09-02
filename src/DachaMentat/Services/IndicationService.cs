@@ -4,7 +4,7 @@ using DachaMentat.Exceptions;
 using DachaMentat.Utils;
 using Microsoft.EntityFrameworkCore;
 
-namespace DachaMentor.Services
+namespace DachaMentat.Services
 {
     /// <summary>
     /// 

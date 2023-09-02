@@ -1,8 +1,8 @@
 using DachaMentat.DTO;
-using DachaMentor.Services;
+using DachaMentat.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DachaMentor.Controllers
+namespace DachaMentat.Controllers
 {
     [ApiController]
     public class SensorController : ControllerBase

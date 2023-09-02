@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "DachaMentor": {
+    "DachaMentat": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",

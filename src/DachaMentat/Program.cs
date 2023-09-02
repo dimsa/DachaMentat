@@ -1,4 +1,4 @@
-using DachaMentor.Services;
+using DachaMentat.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
