@@ -1,4 +1,5 @@
 using DachaMentat.DTO;
+using DachaMentat.Executors;
 using DachaMentat.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,41 +14,37 @@ namespace DachaMentat.Controllers
     {
         private readonly ILogger<SensorController> _logger;
 
-        private readonly SensorService _sensorService;
+        private readonly ISensorControllerExecutor _executor;
 
-        public SensorController(ILogger<SensorController> logger, SensorService sensorService)
+        public SensorController(ILogger<SensorController> logger, ISensorControllerExecutor executor)
         {
             _logger = logger;
-            _sensorService = sensorService;
+            _executor = executor;
         }
 
         [HttpGet("/sensors")]
         public async Task<IEnumerable<string>> GetSensors()
         {
-            return await _sensorService.GetSensors();
+            return await _executor.GetSensors();
         }
 
         [HttpPost("/sensors/register")]
-        public IActionResult RegisterSensor([FromBody] SensorRegistrationDto sensorDto)
+        public async Task<BaseResponse> RegisterSensor([FromBody] SensorRegistrationDto sensorDto)
         {
             if (sensorDto == null)
             {
-                return BadRequest("Invalid sensor data");
+                return new ErrorResponse("Sensor Data Can not Be null");
             }
 
             if (string.IsNullOrEmpty(sensorDto.PrivateId))
             {
-                return BadRequest("PrivateId is required");
+                return new ErrorResponse("Private Key is Required");
             }
 
-            var registrationResult = _sensorService.RegisterSensor(sensorDto.PrivateId, sensorDto.UnitOfMeasure, sensorDto.Coordinates);
+            var registrationResult =  await _executor.RegisterSensor(sensorDto);
 
-            var response = new SensorRegistrationResponseDto()
-            {
-                Id = registrationResult.Item1,
-                PrivateKey = registrationResult.Item2,
-            };
-            return Ok(response);
+            return registrationResult;
+
         }
     }
 }

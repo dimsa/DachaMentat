@@ -1,3 +1,4 @@
+﻿using DachaMentat.Executors;
 using DachaMentat.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,4 +31,6 @@ static void InitDependencyInjection(WebApplicationBuilder builder)
 {
     builder.Services.AddSingleton(typeof(SensorService));
     builder.Services.AddSingleton(typeof(IndicationService));
+    builder.Services.AddSingleton<ISensorControllerExecutor>(x => new SensorControllerExecutor(x.GetRequiredService<SensorService>()));
+builder.Services.AddSingleton<IIndicationControllerExecutor>(x => new IndicationControllerExeсutor(x.GetRequiredService<IndicationService>(), x.GetRequiredService<SensorService>()));
 }

@@ -5,6 +5,6 @@ namespace DachaMentat.DTO
     public class BaseResponse
     {
         [JsonProperty("responseStatus")]
-        ResponseStatus ResponseStatus { get; set; }        
+        public ResponseStatus ResponseStatus { get; set; }        
     }
 }

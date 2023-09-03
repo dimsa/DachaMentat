@@ -31,7 +31,7 @@ namespace DachaMentat.Services
         /// or
         /// Sensor was registered earlier. Please use UpdateSensor
         /// </exception>
-        internal Tuple<int, string> RegisterSensor(string privateId, string unitOfMeasure, GeoCoordinates coordinates)
+        internal async Task<Tuple<int, string>> RegisterSensor(string privateId, string unitOfMeasure, GeoCoordinates coordinates)
         {
             using (var context = new MentatSensorsDbContext())
             {
@@ -61,7 +61,7 @@ namespace DachaMentat.Services
                 };
 
                 context.Sensors.Add(newSensor);
-                context.SaveChanges();
+                var changesSaved = await context.SaveChangesAsync();
 
                 return new Tuple<int, string>(newSensor.Id, newSensor.PrivateKey);
             }
