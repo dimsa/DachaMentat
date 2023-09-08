@@ -3,7 +3,6 @@ using DachaMentat.Config;
 using DachaMentat.Executors;
 using DachaMentat.Services;
 
-
 public class DachaMentatProgram
 {
     static void Main(string[] args)
@@ -50,8 +49,11 @@ public class DachaMentatProgram
 
     static void InitDependencyInjection(WebApplicationBuilder builder)
     {
-        builder.Services.AddSingleton(typeof(SensorService));
-        builder.Services.AddSingleton(typeof(IndicationService));
+        var connectionString = "Data Source=mentat.db";
+        builder.Services.AddSingleton<IDataSourceService>(x => new DataSourceService(connectionString));
+        builder.Services.AddSingleton<SensorService>(x => new SensorService(x.GetRequiredService<IDataSourceService>()));
+        //builder.Services.AddTransient<IndicationService>(x => new IndicationService(x.GetRequiredService<MentatSensorsDbContext>()));
+        builder.Services.AddSingleton<IndicationService>(x => new IndicationService(x.GetRequiredService<IDataSourceService>()));
         builder.Services.AddSingleton<ISensorControllerExecutor>(x => new SensorControllerExecutor(x.GetRequiredService<SensorService>()));
         builder.Services.AddSingleton<IIndicationControllerExecutor>(x => new IndicationControllerExeсutor(x.GetRequiredService<IndicationService>(), x.GetRequiredService<SensorService>()));
     }

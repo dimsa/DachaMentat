@@ -3,18 +3,21 @@ using DachaMentat.DTO;
 using DachaMentat.Exceptions;
 using DachaMentat.Utils;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-
 namespace DachaMentat.Services
 {
     public class SensorService
     {
         /// <summary>
+        /// The data source
+        /// </summary>
+        private IDataSourceService _dataSource;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SensorService"/> class.
         /// </summary>
-        public SensorService() 
+        public SensorService(IDataSourceService dataSource) 
         {
-
+            _dataSource = dataSource;
         }    
 
         /// <summary>
@@ -33,7 +36,7 @@ namespace DachaMentat.Services
         /// </exception>
         internal async Task<Tuple<int, string>> RegisterSensor(string privateId, string unitOfMeasure, GeoCoordinates coordinates)
         {
-            using (var context = new MentatSensorsDbContext())
+            using (var context = _dataSource.GetDbContext())
             {
                 if (string.IsNullOrEmpty(privateId))
                 {
@@ -80,7 +83,7 @@ namespace DachaMentat.Services
         {
             try
             {
-                using (var context = new MentatSensorsDbContext())
+                using (var context = _dataSource.GetDbContext())
                 {
                     var existingSensor = context.Sensors.FirstOrDefault(s => s.Id == id);
 
@@ -110,7 +113,7 @@ namespace DachaMentat.Services
         /// <returns></returns>
         public async Task<IEnumerable<string>> GetSensors()
         {
-            using (var context = new MentatSensorsDbContext())
+            using (var context = _dataSource.GetDbContext())
             {
                 var existingSensors = await context.Sensors.Select(it => GetSensorRow(it)).ToArrayAsync();
                 return existingSensors;
@@ -125,7 +128,7 @@ namespace DachaMentat.Services
         /// <exception cref="DachaMentat.Exceptions.MentatDbException">Sensor with the specified ID wasn't found</exception>
         public async Task<string> GetSensorUnitOfMeasure(int id)
         {
-            using (var context = new MentatSensorsDbContext())
+            using (var context = _dataSource.GetDbContext())
             {
                 var sensorData = await context.Sensors
                     .Where(s => s.Id == id).FirstOrDefaultAsync();  
@@ -161,7 +164,7 @@ namespace DachaMentat.Services
         /// <exception cref="DachaMentat.Exceptions.MentatDbException">Invalid Sensor Data</exception>
         internal void RemoveSensor(int id, string privateKey)
         {
-            using (var context = new MentatSensorsDbContext())
+            using (var context = _dataSource.GetDbContext())
             {
                 var existingSensor = context.Sensors.FirstOrDefault(s => s.Id == id);
 

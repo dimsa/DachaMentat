@@ -12,11 +12,16 @@ namespace DachaMentat.Services
     public class IndicationService
     {
         /// <summary>
+        /// The data source
+        /// </summary>
+        private IDataSourceService _dataSource;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="IndicationService"/> class.
         /// </summary>
-        public IndicationService()
+        public IndicationService(IDataSourceService dataSource)
         {
-
+            _dataSource = dataSource;
         }
 
         /// <summary>
@@ -33,7 +38,7 @@ namespace DachaMentat.Services
         /// </exception>
         public async Task<bool> AddIndication(int id, string privateKey, double value)
         {
-            using (var context = new MentatSensorsDbContext())
+            using (var context = _dataSource.GetDbContext())
             {
                 if (string.IsNullOrEmpty(privateKey))
                 {
@@ -73,7 +78,7 @@ namespace DachaMentat.Services
         {
             CheckSensorExists(sensorId);
 
-            using (var context = new MentatSensorsDbContext())
+            using (var context = _dataSource.GetDbContext())
             {
                 return await context.Indications
                     .Where(i => i.SensorId == sensorId && i.Timestamp >= startDate && i.Timestamp <= endDate)
@@ -82,9 +87,9 @@ namespace DachaMentat.Services
             }
         }       
 
-        private static void CheckSensorExistsAndCanBeAccessed(int sensorId, string sensorPrivateKey)
+       /* private static void CheckSensorExistsAndCanBeAccessed(int sensorId, string sensorPrivateKey)
         {
-            using (var context = new MentatSensorsDbContext())
+            using (var context = _dataSource.GetDbContext())
             {
                 var existingSensor = context.Sensors.FirstOrDefault(s => s.Id == sensorId);
 
@@ -93,11 +98,11 @@ namespace DachaMentat.Services
                     throw new MentatDbException("Sensor can not be found");
                 }
             }
-        }
+        }*/
 
-        private static void CheckSensorExists(int sensorId)
+        private void CheckSensorExists(int sensorId)
         {
-            using (var context = new MentatSensorsDbContext())
+            using (var context = _dataSource.GetDbContext())
             {
                 var existingSensor = context.Sensors.FirstOrDefault(s => s.Id == sensorId);
 
@@ -116,7 +121,7 @@ namespace DachaMentat.Services
         /// <exception cref="DachaMentat.Exceptions.MentatDbException">Sensor {id} not found</exception>
         internal async Task<string> GetLastIndicationTime(int id)
         {
-            using (var context = new MentatSensorsDbContext())
+            using (var context = _dataSource.GetDbContext())
             {
                 var sensorExists = context.Sensors.Any(it => it.Id == id);
 

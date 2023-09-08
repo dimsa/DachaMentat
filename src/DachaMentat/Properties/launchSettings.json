@@ -2,7 +2,7 @@
   "profiles": {
     "DachaMentat": {
       "commandName": "Project",
-      "commandLineArgs": "--ProxyMode true --ProxyHost http://localhost:5218",
+      "commandLineArgs": "--ProxyMode false --ProxyHost http://localhost:5218",
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
