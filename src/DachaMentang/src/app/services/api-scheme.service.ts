@@ -7,7 +7,8 @@ export class ApiSchemeService {
 
   constructor() { }
 
-  private baseUrl: string = "https://localhost:32768/";
+  private baseUrl: string = "http://localhost:5219/";
+  //private baseUrl: string = "https://localhost:32768/";
 
   getAuthUrl(): string {
     return this.baseUrl + "admin/login";
