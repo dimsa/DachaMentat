@@ -1,0 +1,26 @@
+<ng-container *ngIf="!isEditing">
+    <th scope="row">{{data.id}}</th>
+    <td> <a class="nav-link" routerLinkActive="active" ariaCurrentWhenActive="page" aria-current="page" routerLink="/chart/{{data.id}}">{{data.name}}</a></td>
+    <td>{{data.coordinates}}</td>
+    <td>{{data.unitOfMeasure}}</td>
+    <td class="spoiler">{{data.privateKey}}</td>
+    <td><button type="button" class="btn btn-info" (click)="startEdit()">Edit</button></td>
+</ng-container>
+
+<ng-container *ngIf="isEditing">
+
+    <th scope="row">{{data.id}}</th>
+    <td><input type='text' value="{{data.name}}"></td>
+    <td><input type='text' value="{{data.coordinates}}" /></td>
+    <td><input type='text' value="{{data.unitOfMeasure}}" /></td>
+    <td class="spoiler"><input type='text' value="{{data.privateKey}}" /></td>
+    <td>
+        <button type="button" class="btn btn-danger" (click)="updateData()">Del</button>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <button type="button" class="btn btn-success" (click)="updateData()">Update</button>
+        <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
+
+
+    </td>
+</ng-container>
+

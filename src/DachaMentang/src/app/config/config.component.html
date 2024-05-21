@@ -1,0 +1,34 @@
+<div class="row">
+    <div class="col-md-12">
+    <h2>Configuration of Sensors</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Coordinates</th>
+                    <th scope="col">UnitOfMeasue</th>
+                    <th scope="col">PrivateKey</th>
+                    <th scope="col">Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-template ngFor let-item [ngForOf]="sensors" let-i="index">
+                    <tr app-admin-sensor-meta-item [data]="sensors[i]"></tr>
+                </ng-template>
+                <tr>
+                    <th scope="row">#</th>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><button type="button" class="btn btn-primary" (click)="addSensor()">Add sensor</button></td>
+                    </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
