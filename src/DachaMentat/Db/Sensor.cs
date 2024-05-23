@@ -5,8 +5,8 @@
         // Generated Id of sensor
         public int Id { get; set; }
 
-        // Internal Id of sensor. 
-        public string PrivateId { get; set; }   
+        // Custom name of sensor. 
+        public string Name { get; set; }   
 
         // Private Key of sensor for the uploading of indications and updating of Sensor data
         public string PrivateKey { get; set; }

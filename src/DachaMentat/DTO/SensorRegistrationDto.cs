@@ -8,7 +8,7 @@ namespace DachaMentat.DTO
         public string PrivateId { get; set; }
 
         [JsonProperty("coordinates")]
-        public GeoCoordinates Coordinates { get; set; }
+        public GeoCoordinatesDto Coordinates { get; set; }
 
         [JsonProperty("unitOfMeasure")]
         public string UnitOfMeasure { get; set; }

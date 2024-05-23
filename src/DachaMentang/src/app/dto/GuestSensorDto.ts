@@ -5,13 +5,14 @@ export class GuestSensorDto {
   public coordinates: string | undefined;
   public unitOfMeasure: string | undefined;
   public lastIndication: string | undefined;
+  public lastIndicationTimeStamp: string;
 
-  constructor(id: string, name: string, cordinates: string, unitOfMeasure: string, lastIndication: string) {
+  constructor(id: string, name: string, cordinates: string, unitOfMeasure: string, lastIndication: string, lastIndicationTimeStamp: string) {
     this.id = id;
     this.name = name;
     this.coordinates = cordinates;
     this.unitOfMeasure = unitOfMeasure;
     this.lastIndication = lastIndication;
+    this.lastIndicationTimeStamp = lastIndicationTimeStamp;
   }
-
 }

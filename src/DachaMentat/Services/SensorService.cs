@@ -1,7 +1,9 @@
-﻿using DachaMentat.Db;
+﻿using DachaMentat.Common;
+using DachaMentat.Db;
 using DachaMentat.DTO;
 using DachaMentat.Exceptions;
 using DachaMentat.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 namespace DachaMentat.Services
 {
@@ -18,12 +20,12 @@ namespace DachaMentat.Services
         public SensorService(IDataSourceService dataSource) 
         {
             _dataSource = dataSource;
-        }    
+        }           
 
         /// <summary>
         /// Registers the sensor.
         /// </summary>
-        /// <param name="privateId">The private identifier.</param>
+        /// <param name="name">The private identifier.</param>
         /// <param name="unitOfMeasure">The unit of measure.</param>
         /// <param name="coordinates">The coordinates.</param>
         /// <returns></returns>
@@ -34,13 +36,13 @@ namespace DachaMentat.Services
         /// or
         /// Sensor was registered earlier. Please use UpdateSensor
         /// </exception>
-        internal async Task<Tuple<int, string>> RegisterSensor(string privateId, string unitOfMeasure, GeoCoordinates coordinates)
+        internal async Task<Tuple<int, string>> RegisterSensor(string name, string unitOfMeasure, GeoCoordinates coordinates)
         {
             using (var context = _dataSource.GetDbContext())
             {
-                if (string.IsNullOrEmpty(privateId))
+                if (string.IsNullOrEmpty(name))
                 {
-                    throw new MentatDbException("Sensor can not be registered without privateId");
+                    throw new MentatDbException("Sensor can not be registered without name");
                 }
 
                 if (string.IsNullOrEmpty(unitOfMeasure))
@@ -48,19 +50,19 @@ namespace DachaMentat.Services
                     throw new MentatDbException("Sensor must have unit of measure");
                 }
 
-                var existingSensor = context.Sensors.FirstOrDefault(s => s.PrivateId == privateId);
+                /*var existingSensor = context.Sensors.FirstOrDefault(s => s.Name == name);
 
                 if (existingSensor != null)
                 {
                     throw new MentatDbException("Sensor was registered earlier. Please use UpdateSensor");
-                }
+                }*/
 
                 var newSensor = new Sensor
                 {
-                    PrivateId = privateId,
+                    Name = name,
                     PrivateKey = Guid.NewGuid().ToString(),
                     UnitOfMeasure = unitOfMeasure,
-                    GeoCoordinates = GeoCoordinatesSerializer.Serialize(coordinates)
+                    GeoCoordinates = coordinates.ToString()// GeoCoordinatesSerializer.Serialize(coordinates)
                 };
 
                 context.Sensors.Add(newSensor);
@@ -93,7 +95,7 @@ namespace DachaMentat.Services
                     }
 
                     existingSensor.UnitOfMeasure = unitOfMeasure;
-                    existingSensor.GeoCoordinates = GeoCoordinatesSerializer.Serialize(coordinates);
+                    existingSensor.GeoCoordinates = coordinates.ToString();//GeoCoordinatesSerializer.Serialize(coordinates);
 
                     context.SaveChanges();
                 }
@@ -111,12 +113,29 @@ namespace DachaMentat.Services
         /// Gets the sensors.
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<string>> GetSensors()
+        public async Task<IEnumerable<SensorViewDto>> GetSensorsView()
         {
             using (var context = _dataSource.GetDbContext())
             {
-                var existingSensors = await context.Sensors.Select(it => GetSensorRow(it)).ToArrayAsync();
-                return existingSensors;
+                var a = context.Sensors.ToArray();
+
+                var existingSensors = context.Sensors.
+                    Join(
+                        context.Indications,
+                        s => s.Id,
+                        i => i.SensorId,
+                        (s, i) => new SensorViewDto
+                        {
+                            Id = s.Id,
+                            Name = s.Name,
+                            UnitOfMeasure = s.UnitOfMeasure,
+                            Coordinates = GeoCoordinates.CreateFromSting(s.GeoCoordinates).ToDto(),
+                            LastIndication = i.Value.ToString(),
+                            LastIndicationTimeStamp = new KnownTimeStamp(i.Timestamp).ToString(),
+                        });
+
+
+                return existingSensors.ToArray();
             }
         }
 
@@ -162,13 +181,13 @@ namespace DachaMentat.Services
         /// <param name="id">The identifier.</param>
         /// <param name="privateKey">The private key.</param>
         /// <exception cref="DachaMentat.Exceptions.MentatDbException">Invalid Sensor Data</exception>
-        internal void RemoveSensor(int id, string privateKey)
+        internal void RemoveSensor(int id)
         {
             using (var context = _dataSource.GetDbContext())
             {
                 var existingSensor = context.Sensors.FirstOrDefault(s => s.Id == id);
 
-                if (existingSensor == null || existingSensor.PrivateKey != privateKey || string.IsNullOrEmpty(privateKey))
+                if (existingSensor == null/* || existingSensor.PrivateKey != privateKey || string.IsNullOrEmpty(privateKey)*/)
                 {
                     throw new MentatDbException("Invalid Sensor Data");
                 }
@@ -177,6 +196,21 @@ namespace DachaMentat.Services
 
                 context.SaveChanges();
             }
+        }
+
+        /// <summary>
+        /// Adds the new sensor with empty data
+        /// </summary>
+        /// <returns></returns>
+        internal async Task<bool> AddNewSensor()
+        {
+            var res = await RegisterSensor("New Sensor", "UnitOfMeasure", new GeoCoordinates(0, 0));
+            if (res != null && !string.IsNullOrEmpty(res.Item2))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

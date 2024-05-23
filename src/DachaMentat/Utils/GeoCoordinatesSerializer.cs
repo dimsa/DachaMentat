@@ -6,7 +6,7 @@ namespace DachaMentat.Utils
     /// <summary>
     /// Serializaer for geo coords
     /// </summary>
-    public class GeoCoordinatesSerializer
+ /*   public class GeoCoordinatesSerializer
     {
         /// <summary>
         /// Serializes the specified geo coordinates.
@@ -32,5 +32,5 @@ namespace DachaMentat.Utils
         {
             return JsonConvert.DeserializeObject<GeoCoordinates>(serializedGeoCoordinates);
         }
-    }
+    }*/
 }

@@ -7,5 +7,5 @@ import { GuestSensorDto } from '../dto/GuestSensorDto';
   styleUrls: ['./guest-sensor-meta-item.component.css']
 })
 export class GuestSensorMetaItemComponent {
-  @Input() public data: GuestSensorDto = new GuestSensorDto("0", "0", "0", "0", "0");
+  @Input() public data: GuestSensorDto = new GuestSensorDto("0", "0", "0", "0", "0", "0");
 }

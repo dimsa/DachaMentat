@@ -6,8 +6,10 @@ namespace DachaMentat.Executors
 {
     public interface ISensorControllerExecutor
     {
-        Task<IEnumerable<string>> GetSensors();
+        Task<IEnumerable<SensorViewDto>> GetSensors();
 
-        Task<SensorRegistrationResponseDto> RegisterSensor(SensorRegistrationDto sensorDto);
+        //Task<SensorRegistrationResponseDto> RegisterSensor(SensorRegistrationDto sensorDto);
+
+        Task<bool> AddNewSensor();
     }
 }

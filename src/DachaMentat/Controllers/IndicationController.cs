@@ -28,7 +28,7 @@ namespace DachaMentat.Controllers
 
         [HttpGet("/Indication/{id}")]
         public async Task<string> GetLastIndicationTimestamp(int id)
-        {
+        {            
             return await _executor.GetLastIndicationTimestamp(id);
         }
 

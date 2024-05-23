@@ -1,6 +1,7 @@
 using DachaMentat.DTO;
 using DachaMentat.Executors;
 using DachaMentat.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DachaMentat.Controllers
@@ -23,28 +24,45 @@ namespace DachaMentat.Controllers
         }
 
         [HttpGet("/sensors")]
-        public async Task<IEnumerable<string>> GetSensors()
+        public async Task<IEnumerable<SensorViewDto>> GetSensors()
         {
             return await _executor.GetSensors();
         }
 
-        [HttpPost("/sensors/register")]
-        public async Task<BaseResponse> RegisterSensor([FromBody] SensorRegistrationDto sensorDto)
+        [HttpGet("/sensors/add")]
+        [Authorize(Roles = "Administrators")]
+        public async Task<bool> AddSensor()
         {
-            if (sensorDto == null)
+            try
             {
-                return new ErrorResponse("Sensor Data Can not Be null");
+                await _executor.AddNewSensor();
+                return true;
             }
-
-            if (string.IsNullOrEmpty(sensorDto.PrivateId))
+            catch (Exception)
             {
-                return new ErrorResponse("Private Key is Required");
-            }
 
-            var registrationResult =  await _executor.RegisterSensor(sensorDto);
-
-            return registrationResult;
-
+                return false;
+            }            
         }
+
+        /*  [HttpPost("/sensors/register")]
+          [Authorize(Roles = "Administrators")]
+          public async Task<BaseResponse> RegisterSensor([FromBody] SensorRegistrationDto sensorDto)
+          {
+              if (sensorDto == null)
+              {
+                  return new ErrorResponse("Sensor Data Can not Be null");
+              }
+
+              if (string.IsNullOrEmpty(sensorDto.PrivateId))
+              {
+                  return new ErrorResponse("Private Key is Required");
+              }
+
+              var registrationResult =  await _executor.RegisterSensor(sensorDto);
+
+              return registrationResult;
+
+          }*/
     }
 }

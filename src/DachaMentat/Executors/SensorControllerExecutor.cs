@@ -13,14 +13,19 @@ namespace DachaMentat.Executors
             _sensorService = sensorService;
         }
 
-        public async Task<IEnumerable<string>> GetSensors()
+        public Task<bool> AddNewSensor()
         {
-            return await _sensorService.GetSensors();
+            return _sensorService.AddNewSensor();
         }
 
-        public async Task<SensorRegistrationResponseDto> RegisterSensor(SensorRegistrationDto sensorDto)
+        public async Task<IEnumerable<SensorViewDto>> GetSensors()
         {
-            var registrationResult =await _sensorService.RegisterSensor(sensorDto.PrivateId, sensorDto.UnitOfMeasure, sensorDto.Coordinates);
+            return await _sensorService.GetSensorsView();
+        }
+
+       /* public async Task<SensorRegistrationResponseDto> RegisterSensor(SensorRegistrationDto sensorDto)
+        {
+            var registrationResult = await _sensorService.RegisterSensor(sensorDto.PrivateId, sensorDto.UnitOfMeasure, sensorDto.Coordinates);
             var result = new SensorRegistrationResponseDto()
             {
                 Id = registrationResult.Item1,
@@ -29,6 +34,6 @@ namespace DachaMentat.Executors
 
             return result;
 
-        }
+        }*/
     }
 }

@@ -4,6 +4,13 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ApiSchemeService {
+  getSensorsUrl(): string {
+    return this.baseUrl + "sensors";
+  }
+
+  addSensorsUrl(): string {
+    return this.baseUrl + "sensors/add";
+  }
 
   constructor() { }
 

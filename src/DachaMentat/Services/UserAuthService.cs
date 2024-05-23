@@ -15,7 +15,7 @@ namespace DachaMentat.Services
             List<Claim> claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.Name, login),
-                new Claim(ClaimTypes.Role, "Admin")
+                new Claim(ClaimTypes.Role, "Administrators")
             };
 
             var key = AuthOptions.GetSymmetricSecurityKey();

@@ -71,9 +71,10 @@ public class DachaMentatProgram
             .AddJwtBearer(options =>
             {
                 options.RequireHttpsMetadata = false;
+
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer = true,
+                    ValidateIssuer = true,                    
                     ValidIssuer = AuthOptions.ISSUER,
                     ValidateAudience = true,
                     ValidAudience = AuthOptions.AUDIENCE,
