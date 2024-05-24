@@ -81,7 +81,7 @@ namespace DachaMentat.Services
         /// <param name="coordinates">The coordinates.</param>
         /// <returns></returns>
         /// <exception cref="DachaMentat.Exceptions.MentatDbException">Invalid Sensor Data</exception>
-        internal bool UpdateSensor(int id, string privateKey, string unitOfMeasure, GeoCoordinates coordinates)
+        internal async Task<bool> UpdateSensor(int id, string privateKey, string name, string unitOfMeasure, GeoCoordinates coordinates)
         {
             try
             {
@@ -95,7 +95,7 @@ namespace DachaMentat.Services
                     }
 
                     existingSensor.UnitOfMeasure = unitOfMeasure;
-                    existingSensor.GeoCoordinates = coordinates.ToString();//GeoCoordinatesSerializer.Serialize(coordinates);
+                    existingSensor.GeoCoordinates = coordinates.ToString();
 
                     context.SaveChanges();
                 }
@@ -113,29 +113,76 @@ namespace DachaMentat.Services
         /// Gets the sensors.
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<SensorViewDto>> GetSensorsView()
+        public async Task<IEnumerable<SensorGuestDto>> GetSensorsView()
         {
             using (var context = _dataSource.GetDbContext())
             {
-                var a = context.Sensors.ToArray();
-
-                var existingSensors = context.Sensors.
-                    Join(
-                        context.Indications,
-                        s => s.Id,
-                        i => i.SensorId,
-                        (s, i) => new SensorViewDto
+                var existingSensors = context.Sensors.Select(s =>
+                   
+                new
                         {
                             Id = s.Id,
                             Name = s.Name,
                             UnitOfMeasure = s.UnitOfMeasure,
                             Coordinates = GeoCoordinates.CreateFromSting(s.GeoCoordinates).ToDto(),
-                            LastIndication = i.Value.ToString(),
-                            LastIndicationTimeStamp = new KnownTimeStamp(i.Timestamp).ToString(),
-                        });
+                        }).ToArray();
 
 
-                return existingSensors.ToArray();
+                var res = new List<SensorGuestDto>();
+                foreach (var item in existingSensors)
+                {
+                    var lastInd = context.Indications.OrderByDescending(i => i.Timestamp).FirstOrDefault();
+
+                    var dto = new SensorGuestDto()
+                    {
+                        Id = item.Id,
+                        Name = item.Name,
+                        UnitOfMeasure = item.UnitOfMeasure,
+                        Coordinates = item.Coordinates,
+                        LastIndication = lastInd == null ? "n/a" : lastInd.Value.ToString(),
+                        LastIndicationTimeStamp = lastInd == null ? "n/a" : new KnownTimeStamp(lastInd.Timestamp).ToString(),
+                    };
+
+                    res.Add(dto);
+                }
+
+                return res;
+                //var alexistingSensors.ToArray();
+
+                /*var existingSensors = context.Sensors.
+                    Join(
+                        context.Indications.DefaultIfEmpty(),
+                        s => s.Id,
+                        i => i.SensorId,
+                        (s, i) => new SensorGuestDto
+                        {
+                            Id = s.Id,
+                            Name = s.Name,
+                            UnitOfMeasure = s.UnitOfMeasure,
+                            Coordinates = GeoCoordinates.CreateFromSting(s.GeoCoordinates).ToDto(),
+                            LastIndication = i == null ? "-1" : i.Value.ToString(),
+                            LastIndicationTimeStamp = i == null ? new KnownTimeStamp(DateTime.MinValue).ToString() : new KnownTimeStamp(i.Timestamp).ToString(),
+                        }) ;*/
+                /*    var existingSensors = context.Sensors.
+                     GroupJoin(
+                         context.Indications.OrderBy(t => t.Timestamp).DefaultIfEmpty(),
+                         s => s.Id,
+                         i => i.SensorId,
+                         (s, i) => new {s, i = context.Indications.DefaultIfEmpty() }).Select(gj =>
+
+                         new SensorGuestDto
+                         {
+                             Id = gj.s.Id,
+                             Name = gj.s.Name,
+                             UnitOfMeasure = gj.s.UnitOfMeasure,
+                             Coordinates = GeoCoordinates.CreateFromSting(gj.s.GeoCoordinates).ToDto(),
+                             LastIndication = gj.i.OrderBy(t => t.Timestamp).LastOrDefault() == null ? "-1" : gj.i.LastOrDefault().ToString() ,
+
+                             LastIndicationTimeStamp = gj.i.OrderBy(t => t.Timestamp).LastOrDefault() == null ? new KnownTimeStamp(DateTime.MinValue).ToString() : new KnownTimeStamp(gj.i.OrderBy(t => t.Timestamp).LastOrDefault().Timestamp).ToString(),
+                         }) ;*/
+
+
+                //return existingSensors.ToArray();
             }
         }
 
@@ -181,20 +228,29 @@ namespace DachaMentat.Services
         /// <param name="id">The identifier.</param>
         /// <param name="privateKey">The private key.</param>
         /// <exception cref="DachaMentat.Exceptions.MentatDbException">Invalid Sensor Data</exception>
-        internal void RemoveSensor(int id)
+        internal async Task<bool> RemoveSensor(int id)
         {
-            using (var context = _dataSource.GetDbContext())
+            try
             {
-                var existingSensor = context.Sensors.FirstOrDefault(s => s.Id == id);
-
-                if (existingSensor == null/* || existingSensor.PrivateKey != privateKey || string.IsNullOrEmpty(privateKey)*/)
+                using (var context = _dataSource.GetDbContext())
                 {
-                    throw new MentatDbException("Invalid Sensor Data");
+                    var existingSensor = context.Sensors.FirstOrDefault(s => s.Id == id);
+
+                    if (existingSensor == null/* || existingSensor.PrivateKey != privateKey || string.IsNullOrEmpty(privateKey)*/)
+                    {
+                        throw new MentatDbException("Invalid Sensor Data");
+                    }
+
+                    context.Sensors.Remove(existingSensor);
+
+                    await context.SaveChangesAsync();
+                    return true;
                 }
 
-                context.Sensors.Remove(existingSensor);
-
-                context.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
 
@@ -211,6 +267,30 @@ namespace DachaMentat.Services
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Gets the admin sensors.
+        /// </summary>
+        /// <returns></returns>
+        internal async Task<IEnumerable<SensorAdminDto>> GetAdminSensors()
+        {
+            using (var context = _dataSource.GetDbContext())
+            {
+                var existingSensors = context.Sensors.
+                    Select(s =>
+                        new SensorAdminDto() 
+                        {
+                            Id = s.Id,
+                            Name = s.Name,
+                            UnitOfMeasure = s.UnitOfMeasure,
+                            coordinates = GeoCoordinates.CreateFromSting(s.GeoCoordinates).ToDto(),
+                            PrivateKey = s.PrivateKey
+                        }).ToArray();
+
+
+                return existingSensors;
+            }
         }
     }
 }

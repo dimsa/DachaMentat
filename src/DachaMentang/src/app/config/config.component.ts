@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { AdminSensorDto } from '../dto/AdminSensorDto';
 import { AdminSensorMetaItemComponent } from '../sensor-data/admin-sensor-meta-item.component';
+import { LoggerService } from '../services/logger.service';
+import { SensorService } from '../services/sensor.service';
+import { CoordinatesDto } from '../dto/CoordinatesDto';
 
 
 @Component({
@@ -12,14 +15,39 @@ export class ConfigComponent {
   public sensors: Array<AdminSensorDto> = new Array<AdminSensorDto>;
 
   public addSensor(): void {
-
+    var addSensor = this.sensorConfig.addEmptySensor();
+    addSensor.then((res: boolean) => {
+      this.fetchData();
+     })
+      .catch((error: any) => {
+        this.logger.error(error);
+        throw error;
+      });
   }
 
-  public constructor() {
-    this.sensors = [
-      new AdminSensorDto("1", "fdsf54jytmn45", "MainTemp", "95.23213, 34.43432", "°C"),
-      new AdminSensorDto("2", "m67456ghtrggg", "MainHumidity", "95.23213, 34.43432", "%"),
-      new AdminSensorDto("3", "fc453tvy63673", "MainRaon", "95.23213, 34.43432", "Rain")
-    ];
+  ngOnInit() {
+    this.fetchData();
+  }
+
+
+  private fetchData(): void {
+  var loadedSensors = this.sensorConfig.fetchAdminSensors();
+
+  loadedSensors
+    .then((res: AdminSensorDto[]) => {
+      this.sensors = res;
+    })
+    .catch((error: any) => {
+      this.logger.error(error);
+      throw error;
+    });
+}
+
+  public constructor(private sensorConfig: SensorService, private logger: LoggerService) {
+    this.sensors = [];
+      /*new AdminSensorDto("1", "fdsf54jytmn45", "MainTemp", new CoordinatesDto(), "°C"),
+      new AdminSensorDto("2", "m67456ghtrggg", "MainHumidity", new CoordinatesDto(), "%"),
+      new AdminSensorDto("3", "fc453tvy63673", "MainRaon", new CoordinatesDto(), "Rain")
+    ];*/
   }
 }

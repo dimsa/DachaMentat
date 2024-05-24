@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace DachaMentat.DTO
 {
-    public class SensorViewDto
+    public class SensorAdminDto
     {
         [JsonProperty("id")]
         public int Id { get; set; }
@@ -12,15 +12,14 @@ namespace DachaMentat.DTO
         public string Name { get; set; }
 
         [JsonProperty("coordinates")]
-        public GeoCoordinatesDto Coordinates { get; set; }
+      //  РАБОТАЕТ ТОЛЬКО МЕЛКИМИ БУКВАМИ
+        public GeoCoordinatesDto coordinates { get; set; }
 
         [JsonProperty("unitOfMeasure")]
         public string UnitOfMeasure { get; set; }
 
-        [JsonProperty("lastIndication")]
-        public string LastIndication { get; set; }
+        [JsonProperty("privateKey")]
+        public string PrivateKey { get; set; }
 
-        [JsonProperty("lastIndicationTimeStamp")]
-        public string LastIndicationTimeStamp { get; set; }
     }
 }

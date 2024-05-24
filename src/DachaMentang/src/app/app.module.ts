@@ -55,7 +55,6 @@ echarts.use([
     AdminSensorMetaItemComponent,
     SensorsComponent,
     GuestSensorMetaItemComponent
-
   ],
   imports: [
     BrowserModule, HttpClientModule, AppRoutingModule, FormsModule,

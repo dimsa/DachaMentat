@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { GuestSensorDto } from '../dto/GuestSensorDto';
-import { SensorConfigService } from '../services/sensor-config.service';
+import { SensorService } from '../services/sensor.service';
+import { LoggerService } from '../services/logger.service';
+import { CoordinatesDto } from '../dto/CoordinatesDto';
 
 @Component({
   selector: 'app-sensors',
@@ -11,26 +13,23 @@ export class SensorsComponent {
   public sensors: Array<GuestSensorDto> = new Array<GuestSensorDto>;
 
   ngOnInit() {
-    var loadedSensors = this.sensorConfig.fetchSensors();
+    var loadedSensors = this.sensorConfig.fetchGuestSensors();
 
     loadedSensors
       .then((res: GuestSensorDto[]) => {
         this.sensors = res;
-      //this.httpClient.setAuth(res.token);
-      //this.logger.info(res);
     })
-    .catch((error: any) => {
-      throw error();
-      //console.error('Promise rejected with error: ' + error);
-      return undefined;
+      .catch((error: any) => {
+        this.logger.error(error);
+        throw error();      
     });
   }
 
-  public constructor(private sensorConfig: SensorConfigService) {
-    this.sensors = [
-      new GuestSensorDto("1", "MainTemp", "95.23213, 34.43432", "°C", "0", new Date().toLocaleString()),
-      new GuestSensorDto("2", "MainHumidity", "95.23213, 34.43432", "%", "0", new Date().toLocaleString()),
-      new GuestSensorDto("3", "MainRaon", "95.23213, 34.43432", "Rain", "0", new Date().toLocaleString())
-    ];
+  public constructor(private sensorConfig: SensorService, private logger: LoggerService) {
+   /* this.sensors = [
+      new GuestSensorDto("1", "MainTemp",     new CoordinatesDto(), "°C", "0", new Date().toLocaleString()),
+      new GuestSensorDto("2", "MainHumidity", new CoordinatesDto(), "%", "0", new Date().toLocaleString()),
+      new GuestSensorDto("3", "MainRaon",     new CoordinatesDto(), "Chance", "0", new Date().toLocaleString())
+    ];*/
   }
 }

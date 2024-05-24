@@ -25,10 +25,14 @@ namespace DachaMentat.Common
             return new GeoCoordinates(latitude, longitude);
         }
 
+        public static GeoCoordinates CreateFromDto(GeoCoordinatesDto coordinates)
+        {
+            return new GeoCoordinates(coordinates.Latitude, coordinates.Longitude);
+        }
+
         public GeoCoordinatesDto ToDto()
         {
             return new GeoCoordinatesDto() { Latitude = Latitude, Longitude = Longitude };
-
         }
 
         public override string ToString()

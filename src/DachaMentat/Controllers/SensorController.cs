@@ -24,12 +24,19 @@ namespace DachaMentat.Controllers
         }
 
         [HttpGet("/sensors")]
-        public async Task<IEnumerable<SensorViewDto>> GetSensors()
+        public async Task<IEnumerable<SensorGuestDto>> GetSensors()
         {
-            return await _executor.GetSensors();
+            return await _executor.GetGuestSensors();
         }
 
-        [HttpGet("/sensors/add")]
+        [HttpGet("config/sensors")]
+        [Authorize(Roles = "Administrators")]
+        public async Task<IEnumerable<SensorAdminDto>> GetAdminSensors()
+        {
+            return await _executor.GetAdminSensors();
+        }
+
+        [HttpGet("config/sensors/add")]
         [Authorize(Roles = "Administrators")]
         public async Task<bool> AddSensor()
         {
@@ -43,6 +50,14 @@ namespace DachaMentat.Controllers
 
                 return false;
             }            
+        }
+
+
+        [HttpPost("config/sensor/{id}")]
+        [Authorize(Roles = "Administrators")]
+        public async Task<bool> UpdateSensors(int id, [FromBody] SensorAdminDto updatedSensor)
+        {
+            return await _executor.UpdateSensor(id, updatedSensor);
         }
 
         /*  [HttpPost("/sensors/register")]

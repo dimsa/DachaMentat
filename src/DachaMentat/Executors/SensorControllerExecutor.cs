@@ -1,6 +1,8 @@
-﻿using DachaMentat.DTO;
+﻿using DachaMentat.Common;
+using DachaMentat.DTO;
 using DachaMentat.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Web.Http;
 
 namespace DachaMentat.Executors
 {
@@ -18,22 +20,37 @@ namespace DachaMentat.Executors
             return _sensorService.AddNewSensor();
         }
 
-        public async Task<IEnumerable<SensorViewDto>> GetSensors()
+        public async Task<bool> DeleteSensor(int id)
+        {
+            return await _sensorService.RemoveSensor(id);
+        }
+
+        public async Task<IEnumerable<SensorAdminDto>> GetAdminSensors()
+        {
+            return await _sensorService.GetAdminSensors();
+        }
+
+        public async Task<IEnumerable<SensorGuestDto>> GetGuestSensors()
         {
             return await _sensorService.GetSensorsView();
         }
 
-       /* public async Task<SensorRegistrationResponseDto> RegisterSensor(SensorRegistrationDto sensorDto)
+        public async Task<bool> UpdateSensor(int id, SensorAdminDto updatedSensor)
         {
-            var registrationResult = await _sensorService.RegisterSensor(sensorDto.PrivateId, sensorDto.UnitOfMeasure, sensorDto.Coordinates);
-            var result = new SensorRegistrationResponseDto()
-            {
-                Id = registrationResult.Item1,
-                PrivateKey = registrationResult.Item2,
-            };
+            return await _sensorService.UpdateSensor(id, updatedSensor.PrivateKey, updatedSensor.Name, updatedSensor.UnitOfMeasure, GeoCoordinates.CreateFromDto(updatedSensor.coordinates));
+        }
 
-            return result;
+        /* public async Task<SensorRegistrationResponseDto> RegisterSensor(SensorRegistrationDto sensorDto)
+         {
+             var registrationResult = await _sensorService.RegisterSensor(sensorDto.PrivateId, sensorDto.UnitOfMeasure, sensorDto.Coordinates);
+             var result = new SensorRegistrationResponseDto()
+             {
+                 Id = registrationResult.Item1,
+                 PrivateKey = registrationResult.Item2,
+             };
 
-        }*/
+             return result;
+
+         }*/
     }
 }

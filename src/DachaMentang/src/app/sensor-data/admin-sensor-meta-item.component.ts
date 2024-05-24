@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { AdminSensorDto } from '../dto/AdminSensorDto';
-import { SensorConfigService } from '../services/sensor-config.service';
+import { SensorService } from '../services/sensor.service';
+import { CoordinatesDto } from '../dto/CoordinatesDto';
 
 @Component({
   selector: '[app-admin-sensor-meta-item]',
@@ -8,10 +9,10 @@ import { SensorConfigService } from '../services/sensor-config.service';
   styleUrls: ['./admin-sensor-meta-item.component.css']
 })
 export class AdminSensorMetaItemComponent {
-  @Input() public data: AdminSensorDto = new AdminSensorDto("0", "0", "0", "0", "0");
+  @Input() public data: AdminSensorDto = new AdminSensorDto("0", "0", "0", new CoordinatesDto(), "0");
   isEditing: boolean = false;
 
-  constructor(private sensorConfig: SensorConfigService) {
+  constructor(private sensorConfig: SensorService) {
     console.log(sensorConfig);
   }
 
