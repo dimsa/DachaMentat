@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { AdminSensorDto } from '../dto/AdminSensorDto';
-import { AdminSensorMetaItemComponent } from '../sensor-data/admin-sensor-meta-item.component';
 import { LoggerService } from '../services/logger.service';
 import { SensorService } from '../services/sensor.service';
 import { CoordinatesDto } from '../dto/CoordinatesDto';
@@ -36,6 +35,10 @@ export class ConfigComponent {
   loadedSensors
     .then((res: AdminSensorDto[]) => {
       this.sensors = res;
+
+      for (var i = 0; i < res.length; i++) {
+        res[i].onUpdate.on((newData) => { this.fetchData(); })
+      }
     })
     .catch((error: any) => {
       this.logger.error(error);

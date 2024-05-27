@@ -17,7 +17,7 @@ namespace DachaMentat.Common
 
         public static GeoCoordinates CreateFromSting(string coordinates)
         {
-            var textCoord = coordinates.Split(',');
+            var textCoord = coordinates.Split(' ');
 
             var latitude = double.Parse(textCoord[0].Trim());
             var longitude = double.Parse(textCoord[1].Trim());
@@ -37,7 +37,7 @@ namespace DachaMentat.Common
 
         public override string ToString()
         {
-            return string.Format("{0:0.000000}", Latitude) + "," + string.Format("{0:0.000000}", Longitude);
+            return string.Format("{0:0.000000}", Latitude) + " " + string.Format("{0:0.000000}", Longitude);
         }
     }
 }

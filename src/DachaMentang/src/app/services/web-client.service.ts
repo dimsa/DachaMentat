@@ -18,15 +18,27 @@ export class WebClientService implements IHttpClient {
 
   async post<T>(url: string, body: any): Promise<T> {
     this._logger.log("Post Request Started", url, body);
-    let opt = this.httpOptions;
-    let value = this._httpClient.post(url, body, { headers: opt });
+ //   let opt = this.httpOptions;
+    //let value = this._httpClient.post(url, body, { headers: opt });
+
+    let value;
+
+    if (this.token) {
+      value = this._httpClient.post(url, body, {
+        headers: {
+          "Authorization": "Bearer " + this.token
+        }
+      });
+    } else {
+      value = this._httpClient.post(url, body);
+    }
     
     return await firstValueFrom(value) as T;
   }
 
   async get<T>(url: string): Promise<T> {
     this._logger.log("Get Request Started", url);
-    let opt = this.httpOptions;
+   // let opt = this.httpOptions;
 
     let value;
 

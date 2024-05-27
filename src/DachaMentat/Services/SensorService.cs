@@ -96,6 +96,8 @@ namespace DachaMentat.Services
 
                     existingSensor.UnitOfMeasure = unitOfMeasure;
                     existingSensor.GeoCoordinates = coordinates.ToString();
+                    existingSensor.Name = name;
+                    //existingSensor.PrivateKey = privateKey;
 
                     context.SaveChanges();
                 }

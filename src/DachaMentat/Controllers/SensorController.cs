@@ -55,7 +55,7 @@ namespace DachaMentat.Controllers
 
         [HttpPost("config/sensor/{id}")]
         [Authorize(Roles = "Administrators")]
-        public async Task<bool> UpdateSensors(int id, [FromBody] SensorAdminDto updatedSensor)
+        public async Task<bool> UpdateSensors([FromRoute] int id, [FromBody]SensorAdminDto updatedSensor)
         {
             return await _executor.UpdateSensor(id, updatedSensor);
         }

@@ -10,10 +10,11 @@
 <ng-container *ngIf="isEditing">
 
     <th scope="row">{{data.id}}</th>
-    <td><input type='text' value="{{data.name}}"></td>
-    <td><input type='text' value="{{data.coordinates}}" /></td>
-    <td><input type='text' value="{{data.unitOfMeasure}}" /></td>
-    <td class="spoiler"><input type='text' value="{{data.privateKey}}" /></td>
+    <td><input type='text' [(ngModel)]="data.name"></td>
+    <td><label for="latitude">Latitude:</label><input type='text' name="latitude" [(ngModel)]="latitude" /><br /><label for="longitude">Longitude:</label><input type='text' name="longitude" [(ngModel)]="longitude" /></td>
+    <td><input type='text' [(ngModel)]="data.unitOfMeasure" /></td>
+    <!--td class="spoiler"><input type='text' value="{{data.privateKey}}" /></td-->
+    <td class="spoiler">{{data.privateKey}}</td>
     <td>
         <button type="button" class="btn btn-danger" (click)="updateData()">Del</button>
         &nbsp;&nbsp;&nbsp;&nbsp;

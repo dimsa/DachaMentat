@@ -1,3 +1,4 @@
+import { TypedEvent } from "../misc/TypedEvent";
 import { CoordinatesDto } from "./CoordinatesDto";
 
 export class AdminSensorDto {
@@ -5,20 +6,13 @@ export class AdminSensorDto {
   public id: string;
   public name: string;
   public privateKey: string;
-  /*public get coordinates(): CoordinatesDto {
-    return this._coordinates as CoordinatesDto;
-  }
-
-  public set coordinates(value: object) {
-    this._coordinates = value as CoordinatesDto;
-  }*/
 
   public unitOfMeasure: string;
 
-  //private _coordinates: CoordinatesDto;
   public coordinates: CoordinatesDto;
-  
 
+  public onUpdate = new TypedEvent<AdminSensorDto>;
+  
   constructor(id: string, privateKey: string, name: string, coordinates: CoordinatesDto, unitOfMeasure: string) {
     this.id = id;
     this.privateKey = privateKey;

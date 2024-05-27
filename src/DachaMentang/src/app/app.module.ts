@@ -11,7 +11,7 @@ import { MenuComponent } from './menu/menu.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AccountComponent } from './account/account.component';
 import { FormsModule } from '@angular/forms';
-import { AdminSensorMetaItemComponent } from './sensor-data/admin-sensor-meta-item.component';
+import { AdminSensorMetaItemComponent } from './admin-sensor-meta-item/admin-sensor-meta-item.component';
 import { SensorsComponent } from './sensors/sensors.component';
 import { GuestSensorMetaItemComponent } from './guest-sensor-meta-item/guest-sensor-meta-item.component';
 
