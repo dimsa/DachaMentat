@@ -36,6 +36,12 @@ namespace DachaMentat.Controllers
             return await _executor.GetAdminSensors();
         }
 
+        [HttpGet("sensor/{id}")]
+        public async Task<SensorDataDto> GetSensorData([FromRoute] int id)
+        {
+            return await _executor.GetSensorInfo(id);
+        }
+
         [HttpGet("config/sensors/add")]
         [Authorize(Roles = "Administrators")]
         public async Task<bool> AddSensor()

@@ -6,6 +6,7 @@ import { ChartsComponent } from './charts/charts.component';
 import { ConfigComponent } from './config/config.component';
 import { AdminComponent } from './admin/admin.component';
 import { SensorsComponent } from './sensors/sensors.component';
+import { SensorComponent } from './sensor/sensor.component';
 
 const appRoutes: Routes = [
   { path: 'auth', component: AdminComponent },
@@ -13,7 +14,7 @@ const appRoutes: Routes = [
   { path: 'charts', component: ChartsComponent },
   { path: 'chart/:id', component: ChartsComponent },
   { path: 'sensors', component: SensorsComponent },
-  { path: 'sensor/:id', component: SensorsComponent },
+  { path: 'sensor/:id', component: SensorComponent },
   { path: '', redirectTo: "/charts", pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }  // #enddocregion wildcard
 ];

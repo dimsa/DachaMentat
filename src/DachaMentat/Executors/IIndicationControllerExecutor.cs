@@ -11,6 +11,6 @@ namespace DachaMentat.Executors
 
         Task<ChartIndicationDto> GetDataForReport(int id, string start, string end);
 
-        Task<bool> AddIndication(int id, SensorIndicationDto indication);
+        Task<bool> AddIndication(int id, SensorObtainedIndicationDto indication);
     }
 }

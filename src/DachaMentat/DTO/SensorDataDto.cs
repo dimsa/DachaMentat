@@ -1,9 +1,10 @@
 ﻿using DachaMentat.Common;
+using DachaMentat.Db;
 using Newtonsoft.Json;
 
 namespace DachaMentat.DTO
 {
-    public class SensorAdminDto
+    public class SensorDataDto
     {
         [JsonProperty("id")]
         public int Id { get; set; }
@@ -17,8 +18,8 @@ namespace DachaMentat.DTO
         [JsonProperty("unitOfMeasure")]
         public string UnitOfMeasure { get; set; }
 
-        [JsonProperty("privateKey")]
-        public string PrivateKey { get; set; }
+        [JsonProperty("indications")]
+        public StoredIndicationDto[] Indications { get; set; }
 
     }
 }

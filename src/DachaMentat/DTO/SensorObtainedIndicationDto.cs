@@ -1,6 +1,6 @@
 ﻿namespace DachaMentat.DTO
 {
-    public class SensorIndicationDto
+    public class SensorObtainedIndicationDto
     {
         /// <summary>
         /// Gets or sets the private key.

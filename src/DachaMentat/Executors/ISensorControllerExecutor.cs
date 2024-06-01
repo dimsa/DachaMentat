@@ -17,5 +17,7 @@ namespace DachaMentat.Executors
         Task<bool> DeleteSensor(int id);
 
         Task<bool> UpdateSensor(int id, SensorAdminDto updatedSensor);
+
+        Task<SensorDataDto> GetSensorInfo(int id);
     }
 }

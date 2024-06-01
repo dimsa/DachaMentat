@@ -286,12 +286,50 @@ namespace DachaMentat.Services
                             Id = s.Id,
                             Name = s.Name,
                             UnitOfMeasure = s.UnitOfMeasure,
-                            coordinates = GeoCoordinates.CreateFromSting(s.GeoCoordinates).ToDto(),
+                            Coordinates = GeoCoordinates.CreateFromSting(s.GeoCoordinates).ToDto(),
                             PrivateKey = s.PrivateKey
                         }).ToArray();
 
 
                 return existingSensors;
+            }
+        }
+
+        /// <summary>
+        /// Gets the sensor information.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
+        /// <exception cref="DachaMentat.Exceptions.MentatDbException">Unknown sensor</exception>
+        internal async Task<SensorDataDto> GetSensorInfo(int id)
+        {
+            using (var context = _dataSource.GetDbContext())
+            {
+                var existingSensor = context.Sensors.Where(sen => sen.Id == id).FirstOrDefault();
+
+                if (existingSensor == null)
+                {
+                    throw new MentatDbException("Unknown sensor");
+                }
+
+                var indications = await
+                    context.Indications.
+                    Where(ind => ind.SensorId == id).
+                    OrderByDescending(ind => ind.Timestamp).Select(it =>
+                        new StoredIndicationDto()
+                        {
+                            Value = it.Value,
+                            TimeStamp = new KnownTimeStamp(it.Timestamp).ToString()
+                        }).ToArrayAsync();
+
+                return new SensorDataDto()
+                {
+                    Id = existingSensor.Id,
+                    Name = existingSensor.Name,
+                    Coordinates = GeoCoordinates.CreateFromSting(existingSensor.GeoCoordinates).ToDto(),
+                    UnitOfMeasure = existingSensor.UnitOfMeasure,
+                    Indications = indications
+                };
             }
         }
     }

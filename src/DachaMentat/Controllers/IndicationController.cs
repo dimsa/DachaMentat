@@ -39,7 +39,7 @@ namespace DachaMentat.Controllers
         }
 
         [HttpPut("/Indication/{id}")]
-        public Task<bool> AddIndication(int id, [FromBody] SensorIndicationDto indication)
+        public Task<bool> AddIndication(int id, [FromBody] SensorObtainedIndicationDto indication)
         {
             return _executor.AddIndication(id, indication);
         }

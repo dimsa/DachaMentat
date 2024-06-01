@@ -17,7 +17,7 @@ namespace DachaMentat.Executors
             _sensorService = sensorService;
         }
 
-        public Task<bool> AddIndication(int id, SensorIndicationDto indication)
+        public Task<bool> AddIndication(int id, SensorObtainedIndicationDto indication)
         {
             return _indicationService.AddIndication(id, indication.PrivateKey, indication.Value);
         }

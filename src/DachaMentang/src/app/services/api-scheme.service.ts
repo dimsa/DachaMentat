@@ -4,6 +4,10 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ApiSchemeService {
+  getSensorUrl(id: string): string {
+    return this.baseUrl + "sensor/" + id;
+  }
+
   updateSensorUrl(id: string): string {
     return this.baseUrl + "config/sensor/" + id;
   }

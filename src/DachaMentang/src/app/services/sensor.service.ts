@@ -4,11 +4,28 @@ import { LoggerService } from './logger.service';
 import { ApiSchemeService } from './api-scheme.service';
 import { GuestSensorDto } from '../dto/GuestSensorDto';
 import { AdminSensorDto } from '../dto/AdminSensorDto';
+import { SensorMetaDto } from '../dto/SensorMetaDto';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SensorService {
+  async fetchGuestSensor(sensorId: number): Promise<SensorMetaDto> {
+
+    let rawRes = await this.httpClient.get<SensorMetaDto>(this.apiScheme.getSensorUrl(sensorId.toString()));
+   /* let res = new Array<SensorMetaDto>;
+    for (var i = 0; i < rawRes.length; i++) {
+      let dto = new SensorMetaDto(
+        rawRes[i].id,
+        rawRes[i].name,
+        rawRes[i].coordinates,
+        rawRes[i].unitOfMeasure,
+        rawRes[i].indications);
+      res.push(dto);
+    }*/
+
+    return rawRes;
+  }
   async updateSensor(sensorData: AdminSensorDto): Promise<boolean> {
     let res = await this.httpClient.post<boolean>(this.apiScheme.updateSensorUrl(sensorData.id), sensorData);
 
@@ -18,6 +35,7 @@ export class SensorService {
   async addEmptySensor(): Promise<boolean> {
     return await this.httpClient.get<boolean>(this.apiScheme.addSensorsUrl());
   }
+
   async fetchGuestSensors(): Promise<GuestSensorDto[]> {
 
     let rawRes = await this.httpClient.get<GuestSensorDto[]>(this.apiScheme.getSensorsUrl());
@@ -34,8 +52,6 @@ export class SensorService {
     }
 
     return res;
-
-    //return await this.httpClient.get<GuestSensorDto[]>(this.apiScheme.getSensorsUrl());
   }
 
   async fetchAdminSensors(): Promise<AdminSensorDto[]> {

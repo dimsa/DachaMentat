@@ -29,6 +29,7 @@ import {
 import { LabelLayout, UniversalTransition } from 'echarts/features';
 import { CanvasRenderer } from 'echarts/renderers';
 import 'echarts/theme/macarons.js';
+import { SensorComponent } from './sensor/sensor.component';
 
 echarts.use([
   BarChart,
@@ -54,7 +55,8 @@ echarts.use([
     AccountComponent,
     AdminSensorMetaItemComponent,
     SensorsComponent,
-    GuestSensorMetaItemComponent
+    GuestSensorMetaItemComponent,
+    SensorComponent
   ],
   imports: [
     BrowserModule, HttpClientModule, AppRoutingModule, FormsModule,

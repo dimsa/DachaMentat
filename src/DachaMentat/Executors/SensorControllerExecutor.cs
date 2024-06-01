@@ -35,9 +35,19 @@ namespace DachaMentat.Executors
             return await _sensorService.GetSensorsView();
         }
 
+        public async Task<SensorDataDto> GetSensorInfo(int id)
+        {
+            return await _sensorService.GetSensorInfo(id);
+        }
+
         public async Task<bool> UpdateSensor(int id, SensorAdminDto updatedSensor)
         {
-            return await _sensorService.UpdateSensor(id, updatedSensor.PrivateKey, updatedSensor.Name, updatedSensor.UnitOfMeasure, GeoCoordinates.CreateFromDto(updatedSensor.coordinates));
+            return await _sensorService.UpdateSensor(
+                id,
+                updatedSensor.PrivateKey, 
+                updatedSensor.Name, 
+                updatedSensor.UnitOfMeasure, 
+                GeoCoordinates.CreateFromDto(updatedSensor.Coordinates));
         }
 
         /* public async Task<SensorRegistrationResponseDto> RegisterSensor(SensorRegistrationDto sensorDto)

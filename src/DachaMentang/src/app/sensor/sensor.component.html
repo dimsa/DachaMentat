@@ -1,0 +1,40 @@
+<div class="row">
+    <div class="col-md-12">
+        <h2>Sensor ID: {{sensorId}}</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h3>Name: "{{sensorName}}"</h3>
+        <h3>Coordinates: "{{sensorCoordinates}}"</h3>
+        <h3>Unit of Measure: "{{sensorUnitOfMeasure}}"</h3>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-md-12">
+
+            <div echarts [options]="chartOption" [loading]="loading" class="chart"></div>
+    </div>
+</div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Value</th>
+                        <th scope="col">TimeStamp</th>                        
+                    </tr>
+                </thead>
+                <tbody>
+                        <tr *ngFor="let item of indications; let i = index">
+                            <th scope="row">{{i}}</th>
+                            <td>{{item.value}}</td>
+                            <td>{{item.timeStamp}}</td>
+                        </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
