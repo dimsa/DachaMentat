@@ -12,8 +12,7 @@ export class ChartMesher {
 
   private meshIndications: number[] = [];
 
-
-  constructor(private indications: IndicationDto[]) {
+  constructor(private indications: IndicationDto[], private startTime: number) {
 
     for (var i = 0; i < indications.length; i++) {
       let indication = +indications[i].value;
@@ -63,7 +62,7 @@ export class ChartMesher {
 
     const twoHours = 1000 * 60 * 60 * 2;
 
-    let currentTime = Date.now();
+    let currentTime = this.startTime;
     var dateTime = new Date(+currentTime);
     this.meshTimeStamps = [];
     let localTimeStamps = [];

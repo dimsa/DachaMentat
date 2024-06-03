@@ -6,7 +6,7 @@ import { CoordinatesDto } from '../dto/CoordinatesDto';
 import { SensorMetaDto } from '../dto/SensorMetaDto';
 import { IndicationDto } from '../dto/IndicationDto';
 import { EChartsOption } from 'echarts';
-import { ChartMesher } from '../chart-mesher/ChartMesher';
+import { ChartMesher } from '../model/ChartMesher';
 
 @Component({
   selector: 'app-sensor',
@@ -72,7 +72,7 @@ export class SensorComponent {
         this.indications = res.indications;
 
 
-        let mesher = new ChartMesher(this.indications);
+        let mesher = new ChartMesher(this.indications, Date.now());
 
         let timeStamps = mesher.getTimeStamps();
         let series = mesher.getSeries();
