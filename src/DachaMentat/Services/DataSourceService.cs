@@ -4,16 +4,26 @@ namespace DachaMentat.Services
 {
     public class DataSourceService : IDataSourceService
     {
-        private string _connectionString;
+        private MentatSensorsDbContext _sensorDbContext;
+        private MentatUsersDbContext _usersDbContext;
 
-        public DataSourceService(string connectionString)
+        //  private string _connectionString;
+
+        public DataSourceService(MentatSensorsDbContext sensorsDbContext, MentatUsersDbContext usersDbContext)
         {
-            _connectionString = connectionString;
+            //_connectionString = connectionString;
+            _sensorDbContext = sensorsDbContext;
+            _usersDbContext = usersDbContext;
         }
 
         public MentatSensorsDbContext GetDbContext()
         {
-            return new MentatSensorsDbContext(_connectionString);
+            return _sensorDbContext;//  new MentatSensorsDbContext(_connectionString);
+        }
+
+        public MentatUsersDbContext GetUsersDbContext()
+        {
+            return _usersDbContext;// new MentatUsersDbContext(_connectionString);
         }
     }
 }

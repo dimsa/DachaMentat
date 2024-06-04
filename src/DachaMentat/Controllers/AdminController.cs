@@ -1,4 +1,5 @@
 using DachaMentat.DTO;
+using DachaMentat.Exceptions;
 using DachaMentat.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,24 @@ namespace DachaMentat.Controllers
         {
             _logger = logger;
             _authService = authService;
+        }
+
+        [HttpPost("/admin/setup")]
+        public async Task<BaseResponse> Setup([FromBody] UserAuthDto user)
+        {
+            if (user == null)
+            {
+                throw new MentatRestrictionException("Setup data was not specified");
+            }
+
+            if (string.IsNullOrEmpty(user.UserName) || string.IsNullOrEmpty(user.Password))
+            {
+                throw new MentatRestrictionException("Setup data was not specified");
+            }
+
+            var res = _authService.Setup(user.UserName, user.Password);
+
+            return new SimpleResponse("Setup success is " + res.ToString());
         }
 
         [HttpGet("/admin/check")]

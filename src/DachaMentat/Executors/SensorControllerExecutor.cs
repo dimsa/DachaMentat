@@ -1,8 +1,6 @@
 ﻿using DachaMentat.Common;
 using DachaMentat.DTO;
 using DachaMentat.Services;
-using Microsoft.AspNetCore.Mvc;
-using System.Web.Http;
 
 namespace DachaMentat.Executors
 {

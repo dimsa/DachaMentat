@@ -1,5 +1,6 @@
 ﻿using AspNetCore.Proxy;
 using DachaMentat.Config;
+using DachaMentat.Db;
 using DachaMentat.Executors;
 using DachaMentat.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -89,11 +90,13 @@ public class DachaMentatProgram
     {
         var connectionString = "Data Source=mentat.db";
         builder.Services.AddScoped<IUserAuthService, UserAuthService>();
-        builder.Services.AddSingleton<IDataSourceService>(x => new DataSourceService(connectionString));
-        builder.Services.AddSingleton<SensorService>(x => new SensorService(x.GetRequiredService<IDataSourceService>()));
+        builder.Services.AddTransient<MentatSensorsDbContext>(x => new MentatSensorsDbContext(connectionString));
+        builder.Services.AddTransient<MentatUsersDbContext>(x => new MentatUsersDbContext(connectionString));
+        builder.Services.AddTransient<IDataSourceService>(x => new DataSourceService(x.GetRequiredService<MentatSensorsDbContext>(), x.GetRequiredService<MentatUsersDbContext>()));
+        builder.Services.AddTransient<SensorService>(x => new SensorService(x.GetRequiredService<IDataSourceService>()));
         //builder.Services.AddTransient<IndicationService>(x => new IndicationService(x.GetRequiredService<MentatSensorsDbContext>()));
-        builder.Services.AddSingleton<IndicationService>(x => new IndicationService(x.GetRequiredService<IDataSourceService>()));
-        builder.Services.AddSingleton<ISensorControllerExecutor>(x => new SensorControllerExecutor(x.GetRequiredService<SensorService>()));
-        builder.Services.AddSingleton<IIndicationControllerExecutor>(x => new IndicationControllerExeсutor(x.GetRequiredService<IndicationService>(), x.GetRequiredService<SensorService>()));
+        builder.Services.AddTransient<IndicationService>(x => new IndicationService(x.GetRequiredService<IDataSourceService>()));
+        builder.Services.AddTransient<ISensorControllerExecutor>(x => new SensorControllerExecutor(x.GetRequiredService<SensorService>()));
+        builder.Services.AddTransient<IIndicationControllerExecutor>(x => new IndicationControllerExeсutor(x.GetRequiredService<IndicationService>(), x.GetRequiredService<SensorService>()));
     }
 }
