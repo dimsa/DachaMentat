@@ -12,6 +12,7 @@ export class AdminComponent {
   login: string = "";
 
   password: string = "";
+  lastError: string = "";
 
   public get isAuth() {
     return this.authService.isAuth;
@@ -21,11 +22,13 @@ export class AdminComponent {
     this.authService.logout();
   }
 
+  public get errorMessage(): string {
+      return this.lastError;
+  }
+
   constructor(private authService: AuthService) {
 
   }
-
-
 
   checkToken() {
     this.authService.checkToken();
@@ -35,8 +38,15 @@ export class AdminComponent {
     this.authService.checkCors();
   }
 
-  onSubmit()  {
-    this.authService.Auth(this.login, this.password);
+  async onSubmit() {
+    try {
+      await this.authService.Auth(this.login, this.password);
+      this.lastError = "";
+    } catch (error) {
+      if (error instanceof Error) {
+        this.lastError = error.message;
+      }
+    }
   }
 
 }

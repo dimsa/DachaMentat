@@ -38,7 +38,7 @@ export class AuthService {
     return this._isAuth;
   }
 
-  public Auth(login: string, password: string) {
+  public async Auth(login: string, password: string) {
 
     //let getReq = this.httpClient.get(this.apiScheme.getCheckCorsUrl());
 
@@ -50,14 +50,19 @@ export class AuthService {
 
     let cont = "{\"userName\": \"string\",\"password\": \"string\"} ";
     let authResult = this.httpClient.post(this.apiScheme.getAuthUrl(), auth);
-    authResult
+    await authResult
       .then((res: any) => {
-        this.httpClient.setAuth(res.token);
-        this.logger.info(res);
-        this._isAuth = true;
+        if (res.responseStatus.isSuccess) {
+          this.httpClient.setAuth(res.token);
+          this.logger.info(res);
+          this._isAuth = true;
+        } else {
+          throw Error(res.responseStatus.message);
+        }
       })
       .catch((error: any) => {
         console.error('Promise rejected with error: ' + error);
+        throw Error('Promise rejected with error: ' + error);
     });
   }
 
