@@ -60,7 +60,7 @@ namespace DachaMentat.Controllers
         public async Task<BaseResponse> Login([FromBody]UserAuthDto userAuth)
         {
             try
-            {
+            {                
                 var token = _authService.CreateToken(userAuth.UserName, userAuth.Password);
 
                 return new TokenResponse(token);

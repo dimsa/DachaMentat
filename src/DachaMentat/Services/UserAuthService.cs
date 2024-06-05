@@ -1,12 +1,9 @@
 ﻿using DachaMentat.Config;
 using DachaMentat.Db;
 using DachaMentat.Exceptions;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Principal;
 
 namespace DachaMentat.Services
 {
@@ -25,7 +22,11 @@ namespace DachaMentat.Services
             {
                 if (db.Users.Count() == 0)
                 {
-                    throw new MentatDbException("The Mentat was not installed. Please visit /admin/setup.");
+                    var setup = Setup(login, password);
+                    if (!setup)
+                    {
+                        throw new MentatDbException("Setup was not succesful");
+                    }
                 }
 
                 var hash = HashProvider.GetHash(password);
