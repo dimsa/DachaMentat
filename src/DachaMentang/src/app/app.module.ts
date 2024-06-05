@@ -16,31 +16,18 @@ import { SensorsComponent } from './sensors/sensors.component';
 import { GuestSensorMetaItemComponent } from './guest-sensor-meta-item/guest-sensor-meta-item.component';
 
 
-import { NgxEchartsDirective, provideEchartsCore } from 'ngx-echarts';
 import * as echarts from 'echarts/core';
-import { BarChart, LineChart } from 'echarts/charts';
+import { LineChart } from 'echarts/charts';
+import { NgxEchartsDirective, provideEchartsCore } from 'ngx-echarts';
 import {
-  TitleComponent,
-  TooltipComponent,
   GridComponent,
-  DatasetComponent,
-  TransformComponent
 } from 'echarts/components';
-import { LabelLayout, UniversalTransition } from 'echarts/features';
 import { CanvasRenderer } from 'echarts/renderers';
-import 'echarts/theme/macarons.js';
 import { SensorComponent } from './sensor/sensor.component';
 
 echarts.use([
-  BarChart,
   LineChart,
-  TitleComponent,
-  TooltipComponent,
   GridComponent,
-  DatasetComponent,
-  TransformComponent,
-  LabelLayout,
-  UniversalTransition,
   CanvasRenderer
 ]);
 
@@ -57,6 +44,7 @@ echarts.use([
     SensorsComponent,
     GuestSensorMetaItemComponent,
     SensorComponent
+
   ],
   imports: [
     BrowserModule, HttpClientModule, AppRoutingModule, FormsModule,
