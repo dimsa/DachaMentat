@@ -6,13 +6,15 @@ namespace DachaMentat.Db
 {
     public class MentatUsersDbContext : DbContext
     {
-        private string _connectionString;
+    //    private string _connectionString;
+        private DbInitDelegate _dbInit;
 
         public DbSet<User> Users { get; set; }        
 
-        public MentatUsersDbContext(string connectionString)
+        public MentatUsersDbContext(DbInitDelegate  dbInit)
         {
-            _connectionString = connectionString;
+            //_connectionString = connectionString;
+            _dbInit = dbInit;    
             Database.EnsureCreated();
         }
 
@@ -29,7 +31,7 @@ namespace DachaMentat.Db
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(_connectionString);
+            _dbInit(optionsBuilder);
         }
     }
 }

@@ -6,15 +6,15 @@ namespace DachaMentat.Db
 {
     public class MentatSensorsDbContext : DbContext
     {
-        private string _connectionString;
+        private DbInitDelegate _dbInit;
 
         public DbSet<Sensor> Sensors { get; set; }
 
         public DbSet<Indication> Indications { get; set; }
 
-        public MentatSensorsDbContext(string connectionString)
+        public MentatSensorsDbContext(DbInitDelegate dbInit) : base()
         {
-            _connectionString = connectionString;
+            _dbInit = dbInit;
             Database.EnsureCreated();
         }
 
@@ -46,7 +46,7 @@ namespace DachaMentat.Db
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(_connectionString);
+            _dbInit(optionsBuilder);           
         }
     }
 }

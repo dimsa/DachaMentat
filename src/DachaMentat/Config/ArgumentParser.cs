@@ -61,9 +61,9 @@
             return false;
         }
 
-        public OperationSettings Parse()
+        public OperationalSettings Parse()
         {
-            var res = new OperationSettings();
+            var res = new OperationalSettings();
             res.WorkAsProxy = false;
             res.ProxySettings = new ProxySettings();
 

@@ -12,9 +12,9 @@ namespace DachaMentat.Config
         public const string AUDIENCE = "DachaMentang";
 
 #if DEBUG
-        private const string KEY = "1234567890____PLEASE_REPLACE_THIS_SECRETKEY____0987654321";
+        private static string KEY = "1234567890____PLEASE_REPLACE_THIS_SECRETKEY____0987654321";
 #else
-        private const string KEY = "";
+        private static string KEY = Environment.GetEnvironmentVariable("MentatJWTAuthKey");
 #endif
 
         public const int LIFETIME = 1; // время жизни токена - 1 минута

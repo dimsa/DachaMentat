@@ -3,7 +3,7 @@
     /// <summary>
     /// Settings for operation of Mentat Service
     /// </summary>
-    public class OperationSettings
+    public class OperationalSettings
     {
         public bool WorkAsProxy { get; set; }
 

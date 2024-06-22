@@ -42,6 +42,12 @@ namespace DachaMentat.Controllers
             return new SimpleResponse("Setup success is " + res.ToString());
         }
 
+        [HttpGet("/version")]
+        public async Task<BaseResponse> Version()
+        {
+            return new SimpleResponse("DachaMentat. Version = 0.3");
+        }
+
         [HttpGet("/admin/check")]
         [Authorize]
         public async Task<BaseResponse> CheckAuth()
