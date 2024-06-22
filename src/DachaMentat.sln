@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33403.182
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DachaMentat", "DachaMentat\DachaMentat.csproj", "{82156EEA-8BCA-433C-B53C-8812D8607486}"
 EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "dachamentang.client", "DachaMentang\dachamentang.client.esproj", "{B514DC45-2B04-4E13-B925-D96B6084439F}"
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "DachaMentang", "DachaMentang\DachaMentang.esproj", "{B514DC45-2B04-4E13-B925-D96B6084439F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

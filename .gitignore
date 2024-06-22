@@ -133,3 +133,4 @@ $RECYCLE.BIN/
 
 _NCrunch*
 *.bak
+/src/mysql_dbdata

@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AdminSensorMetaItem } from './admin-sensor-meta-item.component';
+import { AdminSensorMetaItemComponent } from './admin-sensor-meta-item.component';
 
 describe('SensorDataComponent', () => {
-  let component: AdminSensorMetaItem;
-  let fixture: ComponentFixture<AdminSensorMetaItem>;
+  let component: AdminSensorMetaItemComponent;
+  let fixture: ComponentFixture<AdminSensorMetaItemComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AdminSensorMetaItem]
+      declarations: [AdminSensorMetaItemComponent]
     });
-    fixture = TestBed.createComponent(AdminSensorMetaItem);
+    fixture = TestBed.createComponent(AdminSensorMetaItemComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
