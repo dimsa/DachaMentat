@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using System.Collections.Generic;
 
 namespace DachaMentat.Db
 {
@@ -15,7 +13,6 @@ namespace DachaMentat.Db
         {
             //_connectionString = connectionString;
             _dbInit = dbInit;    
-            Database.EnsureCreated();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -25,8 +22,13 @@ namespace DachaMentat.Db
             // Configure the primary key for the Sensor entity
             modelBuilder.Entity<User>()
                 .HasKey(e => e.Id);
- 
-             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<User>()
+                .Property(e => e.Id)
+                .UseMySqlIdentityColumn()
+                .ValueGeneratedOnAdd();
+
+            base.OnModelCreating(modelBuilder);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

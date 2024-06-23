@@ -1,8 +1,13 @@
-﻿namespace DachaMentat.Db
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DachaMentat.Db
 {
     public class Sensor
     {
         // Generated Id of sensor
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         // Custom name of sensor. 

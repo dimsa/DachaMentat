@@ -51,9 +51,8 @@ namespace DachaMentat.Controllers
                 await _executor.AddNewSensor();
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
                 return false;
             }            
         }

@@ -15,7 +15,6 @@ namespace DachaMentat.Db
         public MentatSensorsDbContext(DbInitDelegate dbInit) : base()
         {
             _dbInit = dbInit;
-            Database.EnsureCreated();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -26,9 +25,19 @@ namespace DachaMentat.Db
             modelBuilder.Entity<Sensor>()
                 .HasKey(e => e.Id);
 
+            modelBuilder.Entity<Sensor>()
+                .Property(e => e.Id)
+                .UseMySqlIdentityColumn()
+                .ValueGeneratedOnAdd();
+
             // Configure the primary key for the Indication entity
-            modelBuilder.Entity<Indication>()
+           modelBuilder.Entity<Indication>()
                 .HasKey(e => e.Id);
+
+            modelBuilder.Entity<Indication>()
+                .Property(e => e.Id)
+                .UseMySqlIdentityColumn()
+                .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<Sensor>(entity =>
             {

@@ -6,6 +6,7 @@ using DachaMentat.Executors;
 using DachaMentat.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -71,7 +72,55 @@ public class DachaMentatProgram
             app.RunProxy(proxy => proxy.UseHttp(operationalSettings.ProxySettings.BaseUrl));
         }
 
+        CheckAndApplyMigrations(app);
+
         app.Run();
+    }
+
+    private static void CheckAndApplyMigrations(WebApplication host)
+    {
+
+        try
+        {
+            using (var scope = host.Services.CreateScope())
+            {
+                var dbUsers = scope.ServiceProvider.GetRequiredService<MentatUsersDbContext>();
+                var mig = dbUsers.Database.GetPendingMigrations();
+
+                if (mig.Count() > 0)
+                {
+                    dbUsers.Database.Migrate();
+                    dbUsers.Database.EnsureCreated();
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Migration failed");
+            Console.WriteLine(e);
+        }
+
+        try
+        {
+            using (var scope = host.Services.CreateScope())
+            {
+                var dbSensors = scope.ServiceProvider.GetRequiredService<MentatSensorsDbContext>();
+
+                var mig = dbSensors.Database.GetPendingMigrations();
+
+                if (mig.Count() > 0)
+                {
+                    dbSensors.Database.Migrate();
+                    dbSensors.Database.EnsureCreated();
+                }
+
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Migration failed");
+            Console.WriteLine(e);
+        }
     }
 
     private static DbConnectionSettings InitDbSettings(WebApplicationBuilder builder)
