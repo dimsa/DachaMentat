@@ -52,20 +52,12 @@ export class WebClientService implements IHttpClient {
       value = this._httpClient.get(url);
     }
 
-    /*let value = this._httpClient.get(url, {
-      headers: {
-        "Authorization": 'Token token="1111"'
-      }
-    });*/
-
     return await firstValueFrom(value) as T;
   }
 
   constructor(private _httpClient: HttpClient, private _logger: LoggerService) {
     this.token = "";
     this.httpOptions = new HttpHeaders();
-    //this.httpOptions.set('content-type', 'application/json')
-  //  this.httpOptions.set('Access-Control-Allow-Origin', '*')
     this._logger.log("AngularHttpClientWrapperCreated", _httpClient, _logger);
   }
 
@@ -87,13 +79,9 @@ export class WebClientService implements IHttpClient {
     }
 
   setAuth(token: string): void {
-  //  this.httpOptions = new HttpHeaders();
     this.token = token;
     this.httpOptions.set("Authorization", "Bearer " + token);
     localStorage.setItem(this.tokenKey, token);
-
-   // this.httpOptions.set('content-type', 'application/json')
- //   this.httpOptions.set('Access-Control-Allow-Origin', '*')
   }
 
   resetAuth(): void {

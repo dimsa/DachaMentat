@@ -6,6 +6,8 @@ using DachaMentat.Executors;
 using DachaMentat.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -39,8 +41,14 @@ public class DachaMentatProgram
             options.AddPolicy(name: "BasePolicy",
                               policy =>
                               {
-                                  policy.WithOrigins("http://localhost:4200",
-                                                      "https://localhost:4200");
+                                  policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                                  /*policy.WithOrigins("http://localhost:4200",
+                                                      "https://localhost:4200",
+                                                      "http://localhost:8093",
+                                                      "https://localhost:8093",
+                                                      "http://localhost:8080",
+                                                      "https://localhost:8080"
+                                                      );*/
                               });
         });
 
@@ -86,17 +94,24 @@ public class DachaMentatProgram
             {
                 var dbUsers = scope.ServiceProvider.GetRequiredService<MentatUsersDbContext>();
                 var mig = dbUsers.Database.GetPendingMigrations();
+                // MentatUsersDbContext.GetInfrastructure().GetService<IMigrator>()
+              //  var migrator = dbUsers.GetInfrastructure().GetService<IMigrator>();
+               // migrator.
+               //dbUsers.
+               //dbUsers.Database.
 
                 if (mig.Count() > 0)
                 {
                     dbUsers.Database.Migrate();
+                    Console.WriteLine("Users migrated");
                     dbUsers.Database.EnsureCreated();
+                    Console.WriteLine("Users ensure in creation");
                 }
             }
         }
         catch (Exception e)
         {
-            Console.WriteLine("Migration failed");
+            Console.WriteLine("Migration of Users failed");
             Console.WriteLine(e);
         }
 
@@ -111,14 +126,16 @@ public class DachaMentatProgram
                 if (mig.Count() > 0)
                 {
                     dbSensors.Database.Migrate();
+                    Console.WriteLine("Sensors migrated");
                     dbSensors.Database.EnsureCreated();
+                    Console.WriteLine("Sensors ensure in creation");
                 }
 
             }
         }
         catch (Exception e)
         {
-            Console.WriteLine("Migration failed");
+            Console.WriteLine("Migration of Sensors failed");
             Console.WriteLine(e);
         }
     }
@@ -134,7 +151,7 @@ public class DachaMentatProgram
         };
 #else
         var res = new DbConnectionSettings() {
-            ConnectionString = builder.Configuration.GetValue<DbType>("MentatConnectionString"),
+            ConnectionString = builder.Configuration.GetValue<string>("MentatConnectionString"),
             DatabaseType = builder.Configuration.GetValue<DbType>("MentatDbType")
         };
 #endif   
@@ -212,7 +229,14 @@ public class DachaMentatProgram
             return (DbContextOptionsBuilder optionsBuilder) =>
             {
                 var serverVersion = new MySqlServerVersion(new Version(8, 0, 26));
-                optionsBuilder.UseMySql(connectionString, serverVersion);
+                optionsBuilder.UseMySql(
+                    connectionString,
+                    serverVersion,
+                        options => options.EnableRetryOnFailure(
+                        maxRetryCount: 5,
+                        maxRetryDelay: System.TimeSpan.FromSeconds(30),
+                        errorNumbersToAdd: null));
+                    
             };
         }
 

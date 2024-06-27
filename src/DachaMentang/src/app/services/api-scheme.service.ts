@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,7 @@ export class ApiSchemeService {
 
   constructor() { }
 
-  private baseUrl: string = "http://localhost:5219/";
+  private baseUrl: string = environment.ApiBaseUrl;
   //private baseUrl: string = "https://localhost:32768/";
 
   getAuthUrl(): string {
