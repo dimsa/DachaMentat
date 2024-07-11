@@ -79,8 +79,10 @@ public class DachaMentatProgram
         {
             app.RunProxy(proxy => proxy.UseHttp(operationalSettings.ProxySettings.BaseUrl));
         }
-
-        CheckAndApplyMigrations(app);
+        else
+        {
+            CheckAndApplyMigrations(app);
+        }
 
         app.Run();
     }
