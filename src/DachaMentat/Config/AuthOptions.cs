@@ -17,7 +17,7 @@ namespace DachaMentat.Config
         private static string KEY = Environment.GetEnvironmentVariable("MentatJWTAuthKey");
 #endif
 
-        public const int LIFETIME = 1; // время жизни токена - 1 минута
+        public const int LIFETIME = 120; 
 
         public static SymmetricSecurityKey GetSymmetricSecurityKey()
         {

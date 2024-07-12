@@ -52,7 +52,7 @@ public class DachaMentatProgram
                               });
         });
 
-        AddJwtTokenSupport(builder.Services);
+        AddJwtTokenSupport(builder.Services, operationalSettings.WorkAsProxy);
 
         InitDependencyInjection(builder);
 
@@ -177,23 +177,24 @@ public class DachaMentatProgram
         return settings;           
     }
 
-    private static void AddJwtTokenSupport(IServiceCollection services)
+    private static void AddJwtTokenSupport(IServiceCollection services, bool workAsProxy)
     {
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
                 options.RequireHttpsMetadata = false;
 
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,                    
-                    ValidIssuer = AuthOptions.ISSUER,
-                    ValidateAudience = true,
-                    ValidAudience = AuthOptions.AUDIENCE,
-                    ValidateLifetime = true,
-                    IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                    ValidateIssuerSigningKey = true,
-                };
+                options.TokenValidationParameters = new TokenValidationParameters();
+
+
+                var pars = options.TokenValidationParameters;
+                pars.ValidateIssuer = !workAsProxy;
+                pars.ValidIssuer = AuthOptions.ISSUER;
+                pars.ValidateAudience = !workAsProxy;
+                pars.ValidAudience = AuthOptions.AUDIENCE;
+                pars.ValidateLifetime = !workAsProxy;
+                pars.IssuerSigningKey = !workAsProxy ? AuthOptions.GetSymmetricSecurityKey() : null;
+                pars.ValidateIssuerSigningKey = !workAsProxy;
             });
     }
 
