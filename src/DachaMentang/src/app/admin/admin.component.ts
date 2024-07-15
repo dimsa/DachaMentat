@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule, NgForm } from "@angular/forms";
 import { AuthService } from '../services/auth.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-admin',
@@ -13,6 +14,7 @@ export class AdminComponent {
 
   password: string = "";
   lastError: string = "";
+  checkUrl: string = environment.ApiBaseUrl;
 
   public get isAuth() {
     return this.authService.isAuth;
@@ -30,7 +32,7 @@ export class AdminComponent {
 
   }
 
-  checkToken() {
+   checkToken() {
     this.authService.checkToken();
   }
 

@@ -1,5 +1,5 @@
 export const environment = {
-  ApiBaseUrl: "http://localhost:8093/api/",
+  ApiBaseUrl: "http://mentat.dimlight.ru/api/",
   production: true
 
 };

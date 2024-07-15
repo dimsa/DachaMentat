@@ -56,8 +56,8 @@ export class ChartMesher {
   }
 
   processSeries() {
-    const dayCount = 15;
-    const indicationPerDay = 12;
+    const dayCount = 7;
+    const indicationPerDay = 24;
     const chartLength = dayCount * indicationPerDay;
 
     const twoHours = 1000 * 60 * 60 * 2;
